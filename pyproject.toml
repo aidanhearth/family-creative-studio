@@ -1,0 +1,15 @@
+[project]
+name = "family-creative-studio"
+version = "0.2.0"
+description = "A local manifest-driven creative workbench for family agents"
+requires-python = ">=3.11"
+dependencies = ["fastapi", "uvicorn", "python-pptx", "cairosvg", "pillow", "numpy", "soundfile", "mcp>=2,<3", "playwright==1.64.0", "cadgen==0.7.26"]
+[project.scripts]
+family-studio = "studio.cli:main"
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+[tool.setuptools.packages.find]
+include = ["studio*"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]

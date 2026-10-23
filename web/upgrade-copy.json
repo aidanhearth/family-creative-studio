@@ -1,0 +1,76 @@
+{
+  "workflowTitle": "從情境模板開始，局部修改零件、鏡頭與素材",
+  "workflowIntro": "選擇適合的創作模板，透過固定 ID 直接增刪零件與章節、穿插實拍片段或 3D 動態運鏡；僅改動文字時自動沿用既有 CAD 模型，不重複轉檔。",
+  "newProject": {
+    "buttonLabel": "新增作品",
+    "dialogTitle": "建立新作品",
+    "templateSelectLabel": "選擇創作模板",
+    "projectIdLabel": "作品代號（英文小寫與連字號）",
+    "projectIdPlaceholder": "例如：desk-lamp-stand",
+    "projectTitleLabel": "作品名稱",
+    "createButton": "建立並載入模板",
+    "cancelButton": "取消"
+  },
+  "templates": {
+    "product_explainer": {
+      "id": "product_explainer",
+      "title": "器物尺寸與結構解說",
+      "description": "以尺寸母本同步產出圖解、STEP 實體、可編輯簡報與敘事短片。",
+      "defaultTitle": "模組化桌面器物概念設計"
+    },
+    "assembly_story": {
+      "id": "assembly_story",
+      "title": "工序組裝與分解指南",
+      "description": "依組裝順序逐章節高亮對應零件，搭配 3D 分解動畫與尺寸對照表，適合製作結構說明書與教學簡報。",
+      "defaultTitle": "三件式組裝工序與空間核對"
+    },
+    "media_story": {
+      "id": "media_story",
+      "title": "實拍素材與幾何混剪敘事",
+      "description": "結合上傳的實拍圖片或影片裁切片段、3D 關鍵畫面與章節字幕旁白，輸出節奏完整的產品發表短片。",
+      "defaultTitle": "實拍與結構對照敘事短片"
+    }
+  },
+  "actions": {
+    "addBeat": "＋ 新增章節",
+    "deleteBeat": "刪除此章節",
+    "moveBeatUp": "章節上移",
+    "moveBeatDown": "章節下移",
+    "addSolid": "＋ 新增零件",
+    "deleteSolid": "刪除此零件",
+    "patchCurrentItem": "套用局部修改",
+    "uploadMedia": "上傳章節圖片／影片",
+    "clearMedia": "移除章節素材（改用 3D 畫面）",
+    "setTrimRange": "套用裁切起點與秒數",
+    "trimStartLabel": "裁切起點 (秒)",
+    "trimDurationLabel": "片段長度 (秒)",
+    "audioSourceLabel": "本章節聲音來源",
+    "audioUseNarration": "使用章節旁白（草稿或匯入 WAV）",
+    "audioUseClipOriginal": "使用上傳影片原音",
+    "audioMixBoth": "旁白為主、保留原片環境底音",
+    "cameraMotionLabel": "3D 鏡頭模式",
+    "cameraStatic": "定格標準視角",
+    "cameraOrbit": "水平環繞運鏡",
+    "cameraExplode": "零件分解展開",
+    "cameraFocusPush": "聚焦零件推進",
+    "compareRevisions": "比較前後版本差異",
+    "closeComparison": "關閉版本比較",
+    "reuseCadNotice": "幾何未變動：本次直接沿用已驗證之 CAD 模型"
+  },
+  "emptyStates": {
+    "noCustomMedia": "本章節尚未上傳外部圖片或影片，輸出短片時將直接錄製同源 3D 場景或章節圖解。",
+    "noRevisionDiff": "目前僅有一個已儲存版本（v1）。修改尺寸、文案或素材並再次儲存後，即可在此對照前後版本的數值與產物差異。",
+    "noPreviousOutput": "此作品尚未執行五端輸出。點擊右上角「同步更新五種輸出」即可產生網頁、3D、圖解、簡報與短片。",
+    "cadCacheReady": "零件尺寸與位置未變更，更新文案或影片素材時將自動沿用既有 STEP / STL / GLB 實體。"
+  },
+  "errors": {
+    "duplicateId": "代號（ID）已存在，請使用不同的小寫英文與數字組合。",
+    "lastItemCannotDelete": "作品至少需保留一個零件與一個敘事章節，無法刪除最後一項。",
+    "missingFocusSolid": "章節聚焦的零件 ID 不存在，請重新勾選現有零件。",
+    "mediaFormatUnsupported": "僅支援標準 PNG／JPG 圖片與 MP4 影片，上限 50 MiB。",
+    "mediaTrimOutOfRange": "設定的「裁切起點＋片段長度」超出上傳影片的實際總長度，請縮短秒數或調前起點。",
+    "clipHasNoAudio": "素材不含音軌，請選擇章節旁白或靜音。",
+    "cameraRequires3d": "本章節已指定顯示外部上傳素材，若要啟用 3D 動態運鏡，請先切換回 3D 場景模式。",
+    "revisionDiffUnavailable": "找不到指定比較的歷史版本，請重新整理版本清單。"
+  }
+}

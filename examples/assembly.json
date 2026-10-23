@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "id": "public-assembly",
+  "title": "Open Assembly",
+  "subtitle": "One specification, several editable outputs.",
+  "brand": {
+    "name": "暖紙社論",
+    "paper": "#F6F3EC",
+    "ink": "#1C1B18",
+    "accent": "#B84A32",
+    "muted": "#57534E"
+  },
+  "solids": [
+    {
+      "id": "base",
+      "name": "Base",
+      "kind": "cylinder",
+      "size": [
+        120.0,
+        120.0,
+        14.0
+      ],
+      "position": [
+        0.0,
+        0.0,
+        7.0
+      ],
+      "color": "#B37B52",
+      "bore": 0.0
+    },
+    {
+      "id": "pillar",
+      "name": "Stem",
+      "kind": "cylinder",
+      "size": [
+        20.0,
+        20.0,
+        150.0
+      ],
+      "position": [
+        0.0,
+        0.0,
+        89.0
+      ],
+      "color": "#545C61",
+      "bore": 0.0
+    },
+    {
+      "id": "tray",
+      "name": "Cap",
+      "kind": "cylinder",
+      "size": [
+        90.0,
+        90.0,
+        12.0
+      ],
+      "position": [
+        0.0,
+        0.0,
+        170.0
+      ],
+      "color": "#D8C6A7",
+      "bore": 12.0
+    }
+  ],
+  "beats": [
+    {
+      "id": "chapter-1",
+      "title": "尺寸與實體",
+      "body": "同一份尺寸規格，輸出可核對的零件。",
+      "narration": "",
+      "duration": 3.0,
+      "focus": [
+        "base"
+      ],
+      "visual": {
+        "mode": "orbit",
+        "asset": null,
+        "start": 0.0,
+        "audio": "silent"
+      }
+    },
+    {
+      "id": "chapter-2",
+      "title": "分解與組裝",
+      "body": "固定分解鏡頭，協助理解零件位置。",
+      "narration": "",
+      "duration": 3.0,
+      "focus": [
+        "base",
+        "pillar"
+      ],
+      "visual": {
+        "mode": "explode",
+        "asset": null,
+        "start": 0.0,
+        "audio": "silent"
+      }
+    }
+  ],
+  "narration_asset": null,
+  "style_id": "3d",
+  "output_targets": [
+    "web",
+    "diagram",
+    "cad",
+    "slides",
+    "video"
+  ]
+}

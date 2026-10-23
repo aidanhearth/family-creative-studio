@@ -1,0 +1,110 @@
+{
+  "product_explainer": {
+    "title": "模組化手沖咖啡架",
+    "subtitle": "以底座、背柱與帶孔上托架三件正交幾何，示範單一尺寸母本同步輸出互動網頁、等距圖解、STEP 實體、原生簡報與 3D 運鏡短片。",
+    "beats": [
+      {
+        "title": "底座與背柱基準",
+        "body": "底座 {{base.size}}mm 定出桌面範圍，後緣垂直立起 {{pillar.height}}mm 高背柱，建立穩定組裝基準。",
+        "narration": "以底座定出基準，後側立起{{pillar.height}}毫米背柱。",
+        "duration": 4,
+        "focus": [
+          "base",
+          "pillar"
+        ]
+      },
+      {
+        "title": "上托架與濾杯圓孔",
+        "body": "上托架銜接於背柱頂端，中央預留 {{tray.bore}}mm 貫穿圓孔，讓濾杯中心對齊下方分享壺。",
+        "narration": "托架自柱頂前伸，中央{{tray.bore}}毫米圓孔對齊下方壺口。",
+        "duration": 4,
+        "focus": [
+          "tray"
+        ]
+      },
+      {
+        "title": "幾何核對與多端輸出",
+        "body": "確認底座 {{base.size}}mm 與上托架孔徑 {{tray.bore}}mm 無干涉後，同步輸出網頁、CAD、圖解、簡報與短片。",
+        "narration": "確認三件尺寸與孔位無干涉，即可同步輸出五種格式成品。",
+        "duration": 4,
+        "focus": [
+          "base",
+          "pillar",
+          "tray"
+        ]
+      }
+    ]
+  },
+  "assembly_story": {
+    "title": "同軸圓柱三件式組裝研究",
+    "subtitle": "以圓盤底座、圓柱立桿與帶孔上圓盤組成同軸機構示意，透過分解與環繞視角核對三件垂直疊合順序與中心貫穿孔位。",
+    "beats": [
+      {
+        "title": "圓盤底座與基準面",
+        "body": "工序一先安置 {{base.size}}mm 圓盤底座，確立水平基準面與中心軸線，供後續立桿對位。",
+        "narration": "第一步放置{{base.size}}毫米圓盤底座，確立水平基準面。",
+        "duration": 4,
+        "focus": [
+          "base"
+        ]
+      },
+      {
+        "title": "中央立桿垂直定位",
+        "body": "工序二於底座頂面立起 {{pillar.height}}mm 高圓柱立桿，沿垂直軸線延伸，作為上下圓盤的間距支撐件。",
+        "narration": "接著於底座上方立起{{pillar.height}}毫米高圓柱立桿。",
+        "duration": 4,
+        "focus": [
+          "base",
+          "pillar"
+        ]
+      },
+      {
+        "title": "上圓盤與中心貫穿孔",
+        "body": "工序三將上圓盤疊合於立桿頂端，核對中央 {{tray.bore}}mm 貫穿孔與同軸幾何，並以分解視角檢視組裝層次。",
+        "narration": "最後疊合上圓盤，核對中央{{tray.bore}}毫米孔位與層次。",
+        "duration": 4,
+        "focus": [
+          "base",
+          "pillar",
+          "tray"
+        ]
+      }
+    ]
+  },
+  "media_story": {
+    "title": "手沖架實拍與幾何混剪範本",
+    "subtitle": "以同源手沖架幾何為基底，預設使用 3D 運鏡畫面；您可依章節上傳 PNG、JPG 或 MP4 素材並設定裁切起點與聲音模式，完成實拍與結構混剪。",
+    "beats": [
+      {
+        "title": "桌面情境與底座尺寸",
+        "body": "目前顯示底座 {{base.size}}mm 之 3D 畫面；可於本章節上傳桌面實拍照片或 MP4 片段，對照實際擺放空間。",
+        "narration": "首段呈現{{base.size}}毫米底座，可替換為桌面實拍畫面。",
+        "duration": 4,
+        "focus": [
+          "base",
+          "pillar"
+        ]
+      },
+      {
+        "title": "上托架圓孔與分解鏡頭",
+        "body": "透過 3D 環繞或分解鏡頭展示 {{pillar.height}}mm 背柱與上托架 {{tray.bore}}mm 圓孔，清楚交代內部幾何關係。",
+        "narration": "中段以動態鏡頭展示托架{{tray.bore}}毫米圓孔與結構。",
+        "duration": 4,
+        "focus": [
+          "tray"
+        ]
+      },
+      {
+        "title": "匯入實拍裁切與輸出",
+        "body": "歡迎上傳沖煮片段並設定裁切起點，在旁白、原片音訊或靜音間擇一，同步輸出五種格式成品。",
+        "narration": "歡迎匯入實拍片段並設定裁切起點，同步輸出完整短片與簡報。",
+        "duration": 4,
+        "focus": [
+          "base",
+          "pillar",
+          "tray"
+        ]
+      }
+    ]
+  }
+}

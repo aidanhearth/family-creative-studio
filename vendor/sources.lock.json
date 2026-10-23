@@ -1,0 +1,166 @@
+[
+  {
+    "repository": "https://github.com/cathrynlavery/diagram-design",
+    "slug": "cathrynlavery--diagram-design",
+    "commit": "7a12007b5a4246894f342a2e52e78facbc62eca3",
+    "license": "MIT",
+    "capability": "contrast verifier",
+    "source_root": ".sources/cathrynlavery--diagram-design",
+    "files": [
+      {
+        "source": "scripts/verify-contrast.py",
+        "vendored": "vendor/cathrynlavery--diagram-design/contrast.py",
+        "original_sha256": "b9b51d1d1c5e1737cc9f3f74450a5300a20637d6cd3dd5c76289c9cd444c9249",
+        "patched": false,
+        "sha256": "b9b51d1d1c5e1737cc9f3f74450a5300a20637d6cd3dd5c76289c9cd444c9249"
+      }
+    ]
+  },
+  {
+    "repository": "https://github.com/freestylefly/awesome-gpt-image-2",
+    "slug": "freestylefly--awesome-gpt-image-2",
+    "commit": "63e6176fa01be51c000108dacd72716d3e46784b",
+    "license": "MIT",
+    "capability": "style catalog",
+    "source_root": ".sources/freestylefly--awesome-gpt-image-2",
+    "files": [
+      {
+        "source": "data/style-library.json",
+        "vendored": "vendor/freestylefly--awesome-gpt-image-2/styles.json",
+        "original_sha256": "80f5cae039d0d6f312f0e2de2c9b3fc8a806640b0d517c120d704a71c5e4aa72",
+        "patched": false,
+        "sha256": "80f5cae039d0d6f312f0e2de2c9b3fc8a806640b0d517c120d704a71c5e4aa72"
+      }
+    ]
+  },
+  {
+    "repository": "https://github.com/tt-a1i/archify",
+    "slug": "tt-a1i--archify",
+    "commit": "25cf37080fc8b1dbe758a4efc3935b55f3327083",
+    "license": "MIT",
+    "capability": "workflow layout and HTML renderer",
+    "source_root": ".sources/tt-a1i--archify",
+    "files": []
+  },
+  {
+    "repository": "https://github.com/pbakaus/impeccable",
+    "slug": "pbakaus--impeccable",
+    "commit": "5cb95eea9c96479f57afe0732a45470d30183326",
+    "license": "Apache-2.0",
+    "capability": "browser audit and embedded WASM",
+    "source_root": ".sources/pbakaus--impeccable",
+    "files": [
+      {
+        "source": "crates/live/assets/detect-antipatterns-browser.js",
+        "vendored": "vendor/pbakaus--impeccable/impeccable.js",
+        "original_sha256": "e3f447f2fe36be68ecd664587b27831a4d0bbae018b1f4a86c71ab863289b59c",
+        "patched": false,
+        "sha256": "e3f447f2fe36be68ecd664587b27831a4d0bbae018b1f4a86c71ab863289b59c"
+      }
+    ]
+  },
+  {
+    "repository": "https://github.com/wheresryan22/anatomy",
+    "slug": "wheresryan22--anatomy",
+    "commit": "1482e8469b0a9e0d8cc18ea2740a01423d29ae80",
+    "license": "MIT",
+    "capability": "isometric projection and extrusion",
+    "source_root": ".sources/wheresryan22--anatomy",
+    "files": [
+      {
+        "source": "kit/iso-kit.mjs",
+        "vendored": "vendor/wheresryan22--anatomy/iso-kit.mjs",
+        "original_sha256": "6d3ecc725d30c3b0346da309cf61dfa5a65017c23620bbd4093009d4fb104018",
+        "patched": false,
+        "sha256": "6d3ecc725d30c3b0346da309cf61dfa5a65017c23620bbd4093009d4fb104018"
+      }
+    ]
+  },
+  {
+    "repository": "https://github.com/hugohe3/ppt-master",
+    "slug": "hugohe3--ppt-master",
+    "commit": "523e5bd972f94c3cac8742fec0d54d43824a17bb",
+    "license": "MIT",
+    "capability": "SVG to editable DrawingML",
+    "source_root": ".sources/hugohe3--ppt-master",
+    "files": []
+  },
+  {
+    "repository": "https://github.com/img2threejs/img2threejs",
+    "slug": "img2threejs--img2threejs",
+    "commit": "954cd5845e90efd045694bab725d68a9863c20e0",
+    "license": "Apache-2.0",
+    "capability": "workflow and finite-score review contract",
+    "source_root": ".sources/img2threejs--img2threejs",
+    "files": [
+      {
+        "source": "forge/_shared/glb_container.py",
+        "vendored": "vendor/img2threejs--img2threejs/glb_container.py",
+        "original_sha256": "548bada07364cb394616ec293af3440a9d520109933181401e2f8b5afdf947ea",
+        "sha256": "548bada07364cb394616ec293af3440a9d520109933181401e2f8b5afdf947ea",
+        "patched": false
+      }
+    ]
+  },
+  {
+    "repository": "https://github.com/debpalash/VoiceStudio",
+    "slug": "debpalash--VoiceStudio",
+    "commit": "38740bf77628603395addf2348b22d194e99edd7",
+    "license": "AGPL-3.0-only (upstream repository; not distributed)",
+    "capability": "research reference only; no VoiceStudio code or models distributed",
+    "source_root": ".sources/debpalash--VoiceStudio",
+    "files": []
+  },
+  {
+    "repository": "https://github.com/earthtojake/text-to-cad",
+    "slug": "earthtojake--text-to-cad",
+    "commit": "2f793659fb7bab537e2f00836e06448fc4087cb2",
+    "license": "MIT",
+    "capability": "cadgen 0.7.26 native CAD engine",
+    "source_root": ".sources/earthtojake--text-to-cad",
+    "files": []
+  },
+  {
+    "repository": "https://github.com/browser-use/video-use",
+    "slug": "browser-use--video-use",
+    "commit": "43cfc566833548093455c9d4a46bd69913b7e552",
+    "license": "MIT",
+    "capability": "FFmpeg segment concatenation",
+    "source_root": ".sources/browser-use--video-use",
+    "files": [
+      {
+        "source": "helpers/render.py",
+        "vendored": "vendor/browser-use--video-use/video_render.py",
+        "original_sha256": "6bbde45ad5929c7c94fa068996f81e0c44b55a9c9dedcf716fc24c071a5c8dd7",
+        "patched": true,
+        "sha256": "ea019186fcd728dfcabe78b2bfae8d85bad953ae22a92da93e1e0b852d87298a"
+      }
+    ]
+  },
+  {
+    "repository": "https://github.com/shader-effects-inc/shaders",
+    "slug": "shader-effects-inc--shaders",
+    "commit": "eb3df5cedc826008be8e1037c1182e649037c74a",
+    "license": "MIT",
+    "capability": "shaders 4.0.5 browser WebGPU effects",
+    "source_root": ".sources/shader-effects-inc--shaders",
+    "files": []
+  },
+  {
+    "repository": "https://github.com/storytold/artcraft",
+    "slug": "storytold--artcraft",
+    "commit": "800217ed04d10fc12706c28e6e91ae2a6b286092",
+    "license": "MIT OR Apache-2.0",
+    "capability": "serialized undo/redo commands",
+    "source_root": ".sources/storytold--artcraft",
+    "files": [
+      {
+        "source": "frontend/libs/components/pagescene/src/lib/engine/editor/HistoryManager.ts",
+        "vendored": "vendor/storytold--artcraft/HistoryManager.ts",
+        "original_sha256": "3675f10ea6526f0699ea667c52a8c1ecdee87f7c48ebe1cdc6a62fd095b2a9e5",
+        "patched": true,
+        "sha256": "269925d6628e689783534acea3cb04cdb9abf483532f60eefdc18d7a17fcca15"
+      }
+    ]
+  }
+]

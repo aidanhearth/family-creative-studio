@@ -1,0 +1,420 @@
+{
+  "schemaVersion": "2026-10-23.v2",
+  "advisor": {
+    "name": "星 (Gemini 4 Argon High)",
+    "role": "Product Copy & Visual Design Direction",
+    "round": 2,
+    "mode": "offline_free_verifiable"
+  },
+  "appName": "暖紙造物台",
+  "tagline": "單一尺寸母本，同步輸出互動頁、3D 模型、工程圖解、可編輯簡報與敘事短片",
+  "disclaimer": "本工具產出為概念幾何與結構示意，不代表結構承重、熱力學性能或量產工程簽核。",
+  "emptyState": {
+    "badge": "離線單一母本工作台",
+    "title": "從一組可驗證的尺寸開始創作",
+    "description": "載入示範專案或輸入零件長寬高，工作台會以同一份幾何參數同步產生 3D 預覽、SVG 等角圖解、原生簡報與配音短片。",
+    "primaryActionLabel": "載入「模組化手沖咖啡架」示範",
+    "secondaryActionLabel": "建立空白尺寸專案",
+    "offlineHint": "目前為本機免費離線模式：3D 幾何、SVG 圖解、OOXML 簡報與合成旁白皆於本機確定性生成，不呼叫外部付費 API。"
+  },
+  "navigation": {
+    "spineTitle": "敘事章節與工序",
+    "stageTitle": "即時畫布預覽",
+    "inspectorTitle": "尺寸參數與品質檢查",
+    "views": [
+      {
+        "id": "stage_3d",
+        "label": "3D 幾何舞台",
+        "shortHint": "檢視組件對齊、爆炸視角與淨空尺寸"
+      },
+      {
+        "id": "diagram_svg",
+        "label": "SVG 尺寸圖解",
+        "shortHint": "正視、側視與俯視標註，檢查標籤零重疊"
+      },
+      {
+        "id": "interactive_web",
+        "label": "暖紙互動專題",
+        "shortHint": "結合章節敘事、尺寸表與嵌入式 3D 檢視"
+      },
+      {
+        "id": "slides_pptx",
+        "label": "可編輯簡報",
+        "shortHint": "原生幾何框線、尺寸表格與講者備忘錄"
+      },
+      {
+        "id": "video_edl",
+        "label": "敘事短片預覽",
+        "shortHint": "依 EDL 剪輯清單對齊章節畫面、字幕與本機音軌"
+      }
+    ],
+    "cameraPresets": {
+      "isometric": "等距全覽",
+      "frontClearance": "正面淨空",
+      "topAperture": "俯視圓孔",
+      "exploded": "三件分解"
+    }
+  },
+  "actions": {
+    "loadDemo": "載入咖啡架示範",
+    "applyPreset": "套用視覺色票",
+    "rebuildAll": "同步更新五種輸出",
+    "validateGeometry": "核對幾何與尺寸",
+    "toggleExploded": "切換分解視角",
+    "resetCamera": "重設鏡頭角度",
+    "exportWebHtml": "匯出互動網頁 (.html)",
+    "exportCadGlb": "匯出 3D 模型 (.glb / .step)",
+    "exportDiagramSvg": "匯出尺寸圖解 (.svg)",
+    "exportSlidesPptx": "匯出可編輯簡報 (.pptx)",
+    "exportVideoMp4": "匯出敘事短片 (.mp4 + .edl.json)",
+    "runQualityGates": "執行三項驗收檢查"
+  },
+  "errors": {
+    "holeExceedsTray": {
+      "code": "ERR_GEOM_APERTURE_OVERFLOW",
+      "title": "濾杯圓孔直徑超出上托架安全邊界",
+      "message": "孔徑必須小於所選零件的寬與深。請修改孔徑或零件尺寸；這項檢查不代表結構強度已通過驗證。",
+      "actionLabel": "還原為建議孔徑 (60mm)"
+    },
+    "partInterference": {
+      "code": "ERR_GEOM_AABB_COLLISION",
+      "title": "零件空間位置發生重疊干涉",
+      "message": "底座、背柱與上托架的邊界框發生交集，請確認背柱立於底座頂面（Z=12mm）且上托架接於背柱內側。",
+      "actionLabel": "自動對齊組裝基準面"
+    },
+    "nonFiniteMetric": {
+      "code": "ERR_GATE_NON_FINITE_SCORE",
+      "title": "品質檢查數值異常（拒絕 NaN 放行）",
+      "message": "部分幾何或視覺檢查回傳非有限數值（NaN / Infinity），系統已依 I2J-F1 規則攔截，不視為通過。",
+      "actionLabel": "重新計算幾何與快照"
+    },
+    "svgLabelOverlap": {
+      "code": "ERR_SVG_LABEL_COLLISION",
+      "title": "尺寸標註文字發生重疊",
+      "message": "目前視角下有兩組尺寸引線靠得太近，影響圖面閱讀。系統可自動外移標註線段。",
+      "actionLabel": "自動錯開標註位置"
+    },
+    "fontUrlBlocked": {
+      "code": "WARN_OFFLINE_FONT_FALLBACK",
+      "title": "已攔截外部字型連線，改用本機字型",
+      "message": "為確保離線可重現性（DD-F1），系統不使用遠端字型網址，已自動切換為本機系統襯線與等寬字型。",
+      "actionLabel": "維持本機字型設定"
+    },
+    "emptyTranscriptFallback": {
+      "code": "WARN_VID_SYNTHETIC_AUDIO",
+      "title": "未偵測到外部錄音，已啟用本機離線音軌與字幕",
+      "message": "依 VID-F03 保護規則，系統直接由三段章節旁白生成 SRT 字幕時間軸與本機合成提示音軌，確保影片可正常封裝。",
+      "actionLabel": "檢視時間軸清單 (EDL)"
+    },
+    "pptxUnsafePathBlocked": {
+      "code": "ERR_PPTX_PATH_BOUNDARY",
+      "title": "簡報素材路徑超出專案目錄",
+      "message": "偵測到非本專案 manifest 登記的外部路徑或連結（PM-F1），已中止打包並回滾暫存檔。",
+      "actionLabel": "僅使用專案內建圖表打包"
+    },
+    "statePersistenceRecovered": {
+      "code": "WARN_STATE_DIRTY_PRESERVED",
+      "title": "前次寫入未完成，已保留您尚未儲存的修改",
+      "message": "系統未清除待存標記（ART-F02 保護），您可以安全地重新匯出或還原上一步。",
+      "actionLabel": "重新儲存專案母本"
+    }
+  },
+  "defaultPresetId": "warm_editorial",
+  "presets": [
+    {
+      "id": "warm_editorial",
+      "name": "暖紙社論",
+      "englishName": "Warm Paper Editorial",
+      "description": "溫潤米白紙感搭配深炭墨線與陶土紅標註，適合凸顯木作與金屬比例的技術圖解。",
+      "colors": {
+        "canvasBg": "#F6F3EC",
+        "surfaceBg": "#FDFBF7",
+        "panelBg": "#EFECE4",
+        "stage3dBg": "#EAE4D7",
+        "textPrimary": "#1C1B18",
+        "textSecondary": "#57534E",
+        "textMuted": "#78716C",
+        "accentPrimary": "#B84A32",
+        "accentSecondary": "#2C4C64",
+        "borderHairline": "#D8D2C5",
+        "partBaseColor": "#C8A97E",
+        "partPillarColor": "#3F3D3A",
+        "partTrayColor": "#D6BA94",
+        "statusPass": "#2E6F40",
+        "statusWarn": "#B45309",
+        "statusFail": "#B91C1C"
+      }
+    },
+    {
+      "id": "precision_atelier",
+      "name": "精密工坊",
+      "englishName": "Precision Atelier",
+      "description": "冷灰紙面搭配深石板 3D 舞台與工業琥珀色尺寸線，強調毫米級孔位與正交投影。",
+      "colors": {
+        "canvasBg": "#F2F4F5",
+        "surfaceBg": "#FFFFFF",
+        "panelBg": "#E5E9EC",
+        "stage3dBg": "#181B1E",
+        "textPrimary": "#141619",
+        "textSecondary": "#4B5563",
+        "textMuted": "#6B7280",
+        "accentPrimary": "#9A4D03",
+        "accentSecondary": "#0F766E",
+        "borderHairline": "#CBD2D9",
+        "partBaseColor": "#94A3B8",
+        "partPillarColor": "#475569",
+        "partTrayColor": "#CBD5E1",
+        "statusPass": "#15803D",
+        "statusWarn": "#B45309",
+        "statusFail": "#DC2626"
+      }
+    },
+    {
+      "id": "forest_craft",
+      "name": "靜木器物",
+      "englishName": "Quiet Timber Craft",
+      "description": "宣紙淺底配松煙墨字與青苔綠重點色，呈現溫和穩定的日常器物手冊質感。",
+      "colors": {
+        "canvasBg": "#F7F5EE",
+        "surfaceBg": "#FCFBF7",
+        "panelBg": "#EDE9DF",
+        "stage3dBg": "#E6E1D5",
+        "textPrimary": "#1E2421",
+        "textSecondary": "#4A5550",
+        "textMuted": "#707B75",
+        "accentPrimary": "#2E5A44",
+        "accentSecondary": "#8C5A3C",
+        "borderHairline": "#D5D0C3",
+        "partBaseColor": "#B08968",
+        "partPillarColor": "#4A3B32",
+        "partTrayColor": "#C39E7E",
+        "statusPass": "#2E5A44",
+        "statusWarn": "#A16207",
+        "statusFail": "#991B1B"
+      }
+    }
+  ],
+  "dimensions": {
+    "unit": "mm",
+    "base": {
+      "id": "part_base",
+      "name": "底座",
+      "widthMm": 180,
+      "depthMm": 130,
+      "heightMm": 12
+    },
+    "pillar": {
+      "id": "part_pillar",
+      "name": "背柱",
+      "widthMm": 20,
+      "depthMm": 20,
+      "heightMm": 180
+    },
+    "upperTray": {
+      "id": "part_upper_tray",
+      "name": "上托架",
+      "widthMm": 130,
+      "depthMm": 90,
+      "heightMm": 12,
+      "holeDiameterMm": 60
+    },
+    "derivedMetrics": {
+      "totalHeightMm": 192,
+      "underTrayClearanceMm": 168,
+      "minTrayEdgeMarginMm": 15,
+      "centerAxisAligned": true
+    }
+  },
+  "narrative": [
+    {
+      "id": "chapter_1_foundation",
+      "step": 1,
+      "title": "底座與背柱基準",
+      "body": "底座 180×130×12mm，後側立起 20×20×180mm 背柱。",
+      "narration": "先以底座定出桌面範圍，再立起一百八十毫米背柱。",
+      "focusPartId": "part_base",
+      "cameraPreset": "isometric",
+      "durationSec": 5
+    },
+    {
+      "id": "chapter_2_aperture",
+      "step": 2,
+      "title": "上托架與濾杯圓孔",
+      "body": "上托架 130×90×12mm 接於柱頂，中央開 60mm 貫穿圓孔。",
+      "narration": "托架自柱頂前伸，六十毫米圓孔讓濾杯正對下方分享壺。",
+      "focusPartId": "part_upper_tray",
+      "cameraPreset": "topAperture",
+      "durationSec": 5
+    },
+    {
+      "id": "chapter_3_verification",
+      "step": 3,
+      "title": "幾何核對與多端輸出",
+      "body": "三件尺寸無干涉，同步轉出互動頁、GLB、SVG、簡報與短片。",
+      "narration": "確認零件間距與孔位無誤後，同一份參數即可輸出五種檢視格式。",
+      "focusPartId": "all",
+      "cameraPreset": "frontClearance",
+      "durationSec": 5
+    }
+  ],
+  "demo": {
+    "projectId": "modular-pour-over-stand-v1",
+    "projectName": "模組化手沖咖啡架（概念幾何示範）",
+    "summary": "以三件式正交幾何（底座、背柱、帶孔上托架）驗證跨格式單一資料源：不依賴外部付費模型，離線產出可核對尺寸的五種成品。",
+    "nonClaims": [
+      "不宣稱結構承重上限或材料力學強度",
+      "不宣稱熱力學保溫或萃取風味提升",
+      "不宣稱已完成工廠量產或模具公差簽核",
+      "不宣稱視覺品質超越人類設計師或頂尖藝術家"
+    ]
+  },
+  "ui": {
+    "schemaVersion": "2026-10-23.v3",
+    "advisor": "星 (Gemini 4 Argon High)",
+    "status": {
+      "idle": "尚未輸出作品",
+      "queued": "排隊等待中",
+      "running": "正在製作輸出",
+      "succeeded": "已完成輸出",
+      "failed": "製作未完成",
+      "cancelled": "已取消製作",
+      "interrupted": "製作中斷（可重試此版本）"
+    },
+    "stage": {
+      "": "待命",
+      "queued": "已排入工作佇列",
+      "cache": "沿用已驗證之快取成品",
+      "prepare": "準備工作目錄與母本快照",
+      "diagram": "繪製 Anatomy 等距圖解與 Archify 流程",
+      "cad": "建立 STEP / STL / GLB 實體幾何並重開驗算",
+      "slides": "封裝 PPT Master 原生可編輯簡報 (.pptx)",
+      "web": "生成暖紙互動專題網頁 (.html)",
+      "voice": "切分句子並合成章節旁白音軌",
+      "video": "合成 SRT 字幕、響度正規化與 720p 敘事短片",
+      "verify": "執行跨格式尺寸、對比度與結構驗收",
+      "complete": "檢查通過，成品已保存"
+    },
+    "qualityChecks": {
+      "contrast-ink": "主文字對比度達標（WCAG AA ≥ 4.5:1）",
+      "contrast-muted": "次要文字對比度達標（WCAG AA ≥ 4.5:1）",
+      "contrast-accent": "強調色對比度達標（WCAG AA ≥ 4.5:1）",
+      "glb-dimensions": "GLB 三維邊界與母本尺寸一致",
+      "glb-container": "GLB 封裝有效，包含網格且不依賴外部檔案",
+      "step-reimport": "STEP 實體重開驗證與扣除圓孔體積吻合",
+      "pptx-native-shapes": "PPTX 具備原生可編輯 DrawingML 圖形與文字框",
+      "video-streams-captions": "MP4 音視訊流、時長與 SRT 字幕段落完整"
+    },
+    "friendlyErrors": {
+      "throughHoleOverflow": {
+        "match": "The through-hole must fit inside its part",
+        "title": "貫穿圓孔直徑超出零件長寬",
+        "message": "圓孔直徑（孔徑 mm）必須小於該零件的寬度與深度。請調小孔徑數值，或加大零件寬深後再按「套用修改」。"
+      },
+      "cylinderUnequalXY": {
+        "match": "A cylinder requires equal x/y diameters",
+        "title": "圓柱體需要相同的寬與深",
+        "message": "當零件類型為圓柱（cylinder）時，寬（X）與深（Y）代表直徑，兩者數值必須相同。請調整後再按「套用修改」。"
+      },
+      "invalidNumber": {
+        "match": "尺寸需要有效數字",
+        "title": "尺寸欄位需填入有效正數",
+        "message": "長寬高請輸入 1 至 1000 之間的有限數字（mm），孔徑請輸入 0 至 500 之間的數字（0 代表不開孔）。"
+      },
+      "unknownDimensionToken": {
+        "match": "Unknown dimension token",
+        "title": "包含未定義的尺寸變數名稱",
+        "message": "文字中的 {{變數}} 名稱找不到對應零件。可用格式為 {{base.size}}、{{pillar.height}}、{{tray.bore}}，請於「專案 JSON」檢查零件 ID。"
+      },
+      "revisionConflict": {
+        "match": "Revision conflict",
+        "title": "專案版本已更新，請先重新載入",
+        "message": "此專案在另一個視窗或命令列已被修改。為保護您的變更不被覆蓋，請重新整理頁面確認最新版本後再儲存。"
+      },
+      "changedBeforeRender": {
+        "match": "Project changed before render submission",
+        "title": "送出輸出前專案已有新變更",
+        "message": "請先點擊頂部「儲存」確認目前版本，再點擊「同步更新五種輸出」。"
+      },
+      "narrationTooLong": {
+        "match": "exceeds 30 seconds",
+        "title": "單段旁白語音超過 30 秒上限",
+        "message": "目前章節的旁白字數合成語音後超過 30 秒（全片上限 120 秒）。請精簡該段旁白文字後重新儲存並輸出。"
+      },
+      "wavFormatInvalid": {
+        "match": "WAV must be 1–120 seconds",
+        "title": "匯入的 WAV 音檔規格不符",
+        "message": "請選擇 1 至 120 秒、單聲道或雙聲道、取樣率 8–96 kHz 且小於 24 MiB 的標準無壓縮 .wav 檔案。"
+      },
+      "wavDurationMismatch": {
+        "match": "Imported narration duration must match total beat duration within 0.5 seconds",
+        "title": "正式旁白 WAV 長度與章節總秒數不一致",
+        "message": "匯入的 WAV 音檔總長度需與所有章節設定秒數總和相差在 0.5 秒以內（預設 3 章節 × 7 秒 ＝ 21.0 秒）。請調整音檔長度或於「專案 JSON」修改各章節 duration。"
+      },
+      "contrastBelowAA": {
+        "match": "text contrast",
+        "title": "自訂色票對比度低於 4.5:1 標準",
+        "message": "目前文字顏色與紙面背景對比度不足，影響閱讀。請改選內建三組品牌色票，或於「專案 JSON」調深文字色碼。"
+      },
+      "workerInterrupted": {
+        "match": "Worker stopped",
+        "title": "背景轉檔程序被中斷",
+        "message": "前一次成功發布的作品仍完整保留。您可以直接點擊右側「重試此版本」重新執行同一份母本快照。"
+      },
+      "sameProjectIdRequired": {
+        "match": "此處編輯保留同一個專案 ID",
+        "title": "JSON 編輯請維持原專案 ID",
+        "message": "在目前面板直接修改 JSON 時，請勿更動頂層 id 欄位（如 pour-over-stand），以免與現有版本紀錄脫鉤。"
+      }
+    },
+    "fiveFormatsScope": {
+      "summary": "以單一尺寸與敘事母本（Manifest）同步驅動五種真實格式輸出，所有產物皆經過結構與數值驗收後才原子發布：",
+      "formats": {
+        "web": {
+          "label": "暖紙互動專題 (index.html + viewer.js)",
+          "included": "內嵌完整尺寸母本、章節敘事、尺寸對照表與可拖曳/可三件分解的 Three.js 3D 預覽（無 WebGL 時自動退回 SVG 圖解）。",
+          "boundary": "純本機靜態打包，不載入外部網路字型或遠端追蹤腳本。"
+        },
+        "diagram": {
+          "label": "工程圖解與流程 (anatomy.svg + workflow.html)",
+          "included": "由共用三維座標投影產生等距 SVG 圖解，並由 Archify 產生結構化章節敘事流程頁。",
+          "boundary": "支援具名方盒（box）、圓柱（cylinder）與貫穿圓孔（bore）組件；非通用自由曲面插畫軟體。"
+        },
+        "cad": {
+          "label": "實體與網格幾何 (model.step + model.stl + model.glb)",
+          "included": "以獨立子程序呼叫 cadgen / build123d / OpenCASCADE 生成精準毫米級 STEP、STL 與 GLB，並強制重開 STEP 驗證體積與邊界框。",
+          "boundary": "僅代表概念幾何與組裝空間關係；不宣稱結構承重、材料強度、熱力學性能或量產模具公差。未部署任意圖片自動轉 3D 模型。"
+        },
+        "slides": {
+          "label": "原生可編輯簡報 (presentation.pptx)",
+          "included": "透過 PPT Master 將每章節 SVG 轉為原生 DrawingML 幾何形狀（p:sp / a:custGeom）、可編輯文字框（a:t）與講者備忘錄，並以 python-pptx 遞迴驗證群組內可編輯圖元。",
+          "boundary": "專注於清晰可改字的技術提案版型，不宣稱超越人類設計師或頂尖藝術家。"
+        },
+        "video": {
+          "label": "敘事短片與字幕 (film.mp4 + captions.srt + edit.edl.json)",
+          "included": "結合章節畫面、旁白音軌、燒錄中文字幕與 -16 LUFS 響度正規化，經 video-use 拼接輸出 1280×720 24fps MP4 與可稽核 EDL 清單。",
+          "boundary": "字幕採用章節級時間軸（beat-level timing），非語音辨識逐字對齊。"
+        }
+      },
+      "auxiliaryOutputs": {
+        "imagePrompt": "影像風格參考（image-prompt.txt / image-brief.json）僅輸出含精確尺寸與色票之結構化提示詞供創作者參考，本機不呼叫任何付費生圖 API。",
+        "projectBundle": "完整作品包（project.zip）包含上述所有驗證產物、SHA-256 清單與第三方開源授權聲明（THIRD_PARTY/）。"
+      }
+    },
+    "voiceModeGuide": {
+      "draftModeLabel": "eSpeak NG · 本機草稿配音（預設）",
+      "draftModeDescription": "未匯入外部音檔時，系統使用 VoiceStudio 內保留 MIT / Patter 授權標示的句子切段模組配合本機免費 eSpeak NG (cmn) 合成草稿語音，供離線核對影片段落節奏與字幕時間。本環境未安裝全套 VoiceStudio 深度學習語音權重，不宣稱擬真音質。",
+      "formalWavLabel": "已匯入正式旁白 WAV",
+      "formalWavDescription": "支援上傳您錄製或外部製作的無壓縮 .wav 音檔（1–120 秒、單/雙聲道、8–96 kHz、上限 24 MiB）。匯入音檔的總秒數需與各章節設定秒數（duration）總和相差在 ±0.5 秒內，系統將自動替換音軌並進行 -16 LUFS 響度正規化。"
+    },
+    "dimensionTokenGuide": {
+      "label": "尺寸變數自動連動說明",
+      "hint": "母本內文與旁白支援 {{base.size}}、{{pillar.height}}、{{tray.bore}} 等尺寸變數。左側一般輸入框會顯示解析後的實際數字（如 180×130×12）；只要您不手動改動文字框內容，修改下方零件尺寸時文字會自動同步更新。若要直接編輯 {{...}} 變數模板，請展開左下角「專案 JSON」。"
+    },
+    "auditUiLabels": {
+      "running": "正在執行 Impeccable WASM 視覺巡檢…",
+      "summaryPrefix": "已完成畫面巡檢",
+      "creamPaletteNote": "註：cream-palette（暖紙米白底色 #F6F3EC）為本工作台刻意採用的社論視覺風格，主文字對比度已達 15.5:1，無須改為純白背景。",
+      "subKilobyteLabel": "< 1 KB"
+    }
+  }
+}
