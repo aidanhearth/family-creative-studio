@@ -106,4 +106,40 @@ def studio_preflight(project_id:str) -> dict:
     """Validate scene assets and trim ranges before spending time rendering."""
     from .media_assets import preflight
     store=Store();m=Manifest.model_validate(store.project(project_id)['manifest'])
-    return preflight(store,m,m.output_targets)
+    from .preflight import contrast_checks
+    return {**preflight(store,m,m.output_targets),'contrast':contrast_checks(m)}
+
+@server.tool()
+@expected_errors
+def studio_import_asset(kind:str,data_base64:str,name:str|None=None) -> dict:
+    """Import media/audio/cad/scene/svg bytes (base64 <=8 MiB). CLI/HTTP limits: 512 MiB media/audio, 50 MiB STEP/GLB, 2 MiB SVG. Returns original content-addressed asset ID."""
+    from .agent_assets import import_inline
+    return import_inline(Store(),kind,data_base64,name)
+
+@server.tool()
+@expected_errors
+def studio_assets() -> list:
+    """List imported original assets and their verified dimensions/durations."""
+    import json
+    return [json.loads(p.read_text()) for p in sorted((Store().root/'assets').glob('*.json'))]
+
+@server.tool()
+@expected_errors
+def studio_timeline(project_id:str) -> dict:
+    """Export an editable timeline with stable scene IDs, trims, mixing, layout and original text expressions."""
+    from .timeline import export_timeline
+    return export_timeline(Store(),project_id)
+
+@server.tool()
+@expected_errors
+def studio_import_timeline(project_id:str,expected_revision:int,timeline:dict,dry_run:bool=False) -> dict:
+    """Validate and apply an edited exported timeline atomically; reject stale revisions and changed sources."""
+    from .timeline import import_timeline
+    return import_timeline(Store(),project_id,expected_revision,timeline,dry_run)
+
+@server.tool()
+@expected_errors
+def studio_preview_geometry(manifest:dict) -> dict:
+    """Build exact draft CAD geometry and bounds without saving a project; requires installed CAD engine."""
+    from .geometry_preview import preview_geometry
+    return preview_geometry(Store(),Manifest.model_validate(manifest))

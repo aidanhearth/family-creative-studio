@@ -28,7 +28,8 @@ def test_stage_cache_integrity_and_copy_isolation(tmp_path):
 
 def test_image_import_and_tamper_preflight(tmp_path):
     store=Store(tmp_path);data=io.BytesIO();Image.new('RGB',(64,32),'red').save(data,format='JPEG')
-    meta=import_media(store,data.getvalue());assert meta['asset'].endswith('.png')
+    meta=import_media(store,data.getvalue());assert meta['asset'].endswith('.jpg')
+    assert (tmp_path/'assets'/meta['asset']).read_bytes()==data.getvalue()
     m=demo().model_dump();m['beats'][0]['visual']={'mode':'image','asset':meta['asset']}
     assert preflight(store,Manifest.model_validate(m),['video'])['ready']
     (tmp_path/'assets'/meta['asset']).write_bytes(b'bad')
@@ -42,7 +43,7 @@ def test_media_schema_conflicts_and_bounds():
     m['beats'][0]['visual']={'mode':'image','asset':'a'*64+'.mp4'}
     with pytest.raises(ValueError):Manifest.model_validate(m)
     m['beats'][0]['visual']={'mode':'clip','asset':'a'*64+'.mp4','audio':'source'};m['narration_asset']='b'*64+'.wav'
-    with pytest.raises(ValueError):Manifest.model_validate(m)
+    assert Manifest.model_validate(m).beats[0].visual.audio=='source'
 
 
 def test_revision_compare_and_race(tmp_path):
@@ -90,14 +91,16 @@ def test_single_part_explode_rejected_early():
     with pytest.raises(ValueError,match='at least two'):Manifest.model_validate(m)
 
 
-def test_clip_voice_cannot_extend_authored_trim(tmp_path):
+def test_clip_voice_cannot_extend_authored_trim(tmp_path,monkeypatch):
     import wave
     from studio.video import audio_track
     m=demo().model_dump();m['beats']=m['beats'][:1]
     m['beats'][0].update(duration=5,visual={'mode':'clip','asset':'a'*64+'.mp4','audio':'voice'})
     class Runner:
+        store=Store(tmp_path/'store')
         def run(self,args,**kwargs):
             with wave.open(str(args[-1]),'wb') as w:
-                w.setnchannels(1);w.setsampwidth(2);w.setframerate(8000);w.writeframes(b'\0\0'*39200)
-    with pytest.raises(ValueError,match='Narration exceeds this trimmed clip'):
+                w.setnchannels(1);w.setsampwidth(2);w.setframerate(8000);w.writeframes(b'\0\0'*48000)
+    monkeypatch.setattr('studio.video._metadata',lambda *a:{})
+    with pytest.raises(ValueError,match='Narration exceeds'):
         audio_track(Manifest.model_validate(m),tmp_path,Runner(),StageCache(tmp_path,'engine'))

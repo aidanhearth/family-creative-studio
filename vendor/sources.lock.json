@@ -159,7 +159,7 @@
         "vendored": "vendor/storytold--artcraft/HistoryManager.ts",
         "original_sha256": "3675f10ea6526f0699ea667c52a8c1ecdee87f7c48ebe1cdc6a62fd095b2a9e5",
         "patched": true,
-        "sha256": "269925d6628e689783534acea3cb04cdb9abf483532f60eefdc18d7a17fcca15"
+        "sha256": "3f4d744a19f336b63381a1afb50353755387d5354b3fc487bfb1f9f5e3e3ddff"
       }
     ]
   }

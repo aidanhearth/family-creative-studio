@@ -47,7 +47,7 @@ def engine_fingerprint():
            'studio/pipeline.py','studio/content.py','studio/schema.py','studio/cad_worker.py',
            'studio/ppt_worker.py','studio/media_worker.py','studio/stage_cache.py','studio/media_assets.py','studio/scene_worker.py','studio/video.py','studio/runner.py','studio/provenance.py','studio/paths.py','studio/runtime.py',
            'scripts/anatomy.mjs','scripts/glb-check.mjs','web/published.css','web/copy.json','dist/viewer.js')
-    paths=[ROOT/name for name in names]+[ROOT/f['vendored'] for source in sources() for f in source['files']]
+    paths=sorted(set([ROOT/name for name in names]+list((ROOT/'studio').glob('*.py'))+list((ROOT/'scripts').glob('*.mjs'))+[ROOT/f['vendored'] for source in sources() for f in source['files']]))
     for path in paths:
         h.update(str(path.relative_to(ROOT)).encode());h.update(path.read_bytes())
     font=Path('/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc')

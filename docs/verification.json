@@ -1,126 +1,314 @@
 {
-  "date": "2026-10-23",
-  "fixture": "examples/assembly.json",
-  "python": "3.11.15",
-  "native_versions": [
-    "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
-    "eSpeak NG text-to-speech: 1.51  Data at: /usr/lib/x86_64-linux-gnu/espeak-ng-data",
-    "v22.23.3",
-    "bubblewrap 0.9.0",
-    "Google Chrome 155.0.8059.39 "
-  ],
-  "python_tests_passed": 49,
-  "javascript_tests_passed": 4,
+  "version": "0.3.0",
+  "date_utc": "2026-10-23",
+  "python_tests": {
+    "passed": 151,
+    "skipped": 0,
+    "full_batch_passed": 151,
+    "elapsed_seconds": 81.03
+  },
+  "javascript_tests": {
+    "passed": 18,
+    "files": 3,
+    "native_node_child_tests": true
+  },
+  "frontend_build": "passed",
   "mcp": {
     "actual_stdio": true,
-    "tools": 14,
-    "stale_revision_rejected": true
+    "tools": 19,
+    "stale_revision_rejected": true,
+    "mac_ssh_launcher_tools": 19
   },
-  "render": {
-    "targets": [
-      "cad",
-      "diagram",
-      "slides",
-      "video",
-      "web"
-    ],
-    "artifact_count": 45,
-    "hashes_match": true,
-    "duration_s": 6,
-    "width": 1280,
-    "height": 720,
-    "fps": 24,
-    "cad": {
-      "expected_volume_mm3": 280443.69300065364,
-      "volume_error_mm3": 1.6880221664905548e-09,
-      "valid": true,
-      "solids": 3,
-      "volume_mm3": 280443.69300065533,
-      "bounds_mm": {
-        "min": [
-          -60.0,
-          -60.0,
-          0.0
+  "renders": [
+    {
+      "fixture": "test_full_pipeline_actual_cad_0",
+      "artifact_count": 62,
+      "hashes_match": true,
+      "quality_passed": true,
+      "video": {
+        "check": "video-streams-captions",
+        "pass": true,
+        "width": 1280,
+        "height": 720,
+        "fps": "24/1",
+        "duration_s": 1.0,
+        "caption_cues": 2,
+        "audio_codec": "aac",
+        "audio_sample_rate": 48000,
+        "audio_channels": 2
+      },
+      "video_generations": {
+        "import": 0,
+        "composition": 1,
+        "concat": 0,
+        "final_mux": 0
+      },
+      "pptx": {
+        "slides": 2,
+        "editable_shapes": 447,
+        "text_frames": 444,
+        "pictures": 2,
+        "native_paths": 429,
+        "embedded_movies": 1,
+        "narration_tracks": 2,
+        "animation": "fade",
+        "autoplay": true,
+        "transition": "fade"
+      },
+      "cad": {
+        "expected_volume_mm3": 2720.774288665778,
+        "volume_error_mm3": 1.2732925824820995e-11,
+        "valid": true,
+        "solids": 2,
+        "volume_mm3": 2720.7742886657907,
+        "bounds_mm": {
+          "min": [
+            -10.69247965377425,
+            -9.241411077886895,
+            -5.0
+          ],
+          "max": [
+            31.0,
+            9.241411077886895,
+            5.0
+          ]
+        },
+        "part_ids": [
+          "block",
+          "ring"
         ],
-        "max": [
-          60.0,
-          60.0,
-          176.0
-        ]
-      },
-      "source_dimensions": [
-        {
-          "id": "base",
-          "size": [
-            120.0,
-            120.0,
-            14.0
-          ],
-          "position": [
-            0.0,
-            0.0,
-            7.0
-          ],
-          "bore": 0.0
+        "source_dimensions": [
+          {
+            "id": "block",
+            "size": [
+              18.0,
+              12.0,
+              10.0
+            ],
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "rotation": [
+              0.0,
+              0.0,
+              25.0
+            ],
+            "bore": 0.0
+          },
+          {
+            "id": "ring",
+            "size": [
+              12.0,
+              12.0,
+              6.0
+            ],
+            "position": [
+              25.0,
+              0.0,
+              0.0
+            ],
+            "rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "bore": 5.0
+          }
+        ],
+        "parts": [
+          {
+            "id": "block",
+            "kind": "box",
+            "bounds_mm": {
+              "min": [
+                -10.692479653774047,
+                -9.241411077886195,
+                -5.0
+              ],
+              "max": [
+                10.692479653774047,
+                9.241411077886195,
+                5.0
+              ]
+            },
+            "volume_mm3": 2160.0,
+            "solid_count": 1,
+            "valid": true
+          },
+          {
+            "id": "ring",
+            "kind": "cylinder",
+            "bounds_mm": {
+              "min": [
+                19.0,
+                -6.0,
+                -3.0
+              ],
+              "max": [
+                31.0,
+                6.0,
+                3.0
+              ]
+            },
+            "volume_mm3": 560.7742886657782,
+            "solid_count": 1,
+            "valid": true
+          }
+        ],
+        "validation_basis": "constructed post-operation CAD and exported STEP re-import",
+        "stl": {
+          "triangles": 1020,
+          "volume_mm3": 2720.5419916191704,
+          "bounds_mm": {
+            "min": [
+              -10.692480087280273,
+              -9.241411209106445,
+              -5.0
+            ],
+            "max": [
+              31.0,
+              9.241411209106445,
+              5.0
+            ]
+          }
         },
-        {
-          "id": "pillar",
-          "size": [
-            20.0,
-            20.0,
-            150.0
-          ],
-          "position": [
-            0.0,
-            0.0,
-            89.0
-          ],
-          "bore": 0.0
-        },
-        {
-          "id": "tray",
-          "size": [
-            90.0,
-            90.0,
-            12.0
-          ],
-          "position": [
-            0.0,
-            0.0,
-            170.0
-          ],
-          "bore": 12.0
-        }
-      ]
-    },
-    "pptx": {
-      "slides": 2,
-      "editable_shapes": 22,
-      "text_frames": 22,
-      "pictures": 2,
-      "native_paths": 2
-    },
-    "motion": [
-      {
-        "mode": "orbit",
-        "frames": 72,
-        "fps": 24,
-        "moving_fraction": 1.0,
-        "repeat_first_frame_equal": true
-      },
-      {
-        "mode": "explode",
-        "frames": 72,
-        "fps": 24,
-        "moving_fraction": 0.9859154929577465,
-        "repeat_first_frame_equal": true
+        "mesh_tolerance_mm": 0.0006
       }
-    ]
+    },
+    {
+      "fixture": "test_original_scene_and_custom0",
+      "artifact_count": 53,
+      "hashes_match": true,
+      "quality_passed": true,
+      "video": {
+        "check": "video-streams-captions",
+        "pass": true,
+        "width": 1280,
+        "height": 720,
+        "fps": "24/1",
+        "duration_s": 0.5,
+        "caption_cues": 0,
+        "audio_codec": "aac",
+        "audio_sample_rate": 48000,
+        "audio_channels": 2
+      },
+      "video_generations": {
+        "import": 0,
+        "composition": 1,
+        "concat": 0,
+        "final_mux": 0
+      },
+      "pptx": {
+        "slides": 2,
+        "editable_shapes": 12,
+        "text_frames": 10,
+        "pictures": 0,
+        "native_paths": 1,
+        "embedded_movies": 1,
+        "narration_tracks": 0,
+        "animation": "fade",
+        "autoplay": true,
+        "transition": "fade"
+      }
+    },
+    {
+      "fixture": "test_source_4k60_video_has_no_0",
+      "artifact_count": 33,
+      "hashes_match": true,
+      "quality_passed": true,
+      "video": {
+        "check": "video-streams-captions",
+        "pass": true,
+        "width": 3840,
+        "height": 2160,
+        "fps": "60/1",
+        "duration_s": 0.1,
+        "caption_cues": 0,
+        "audio_codec": "aac",
+        "audio_sample_rate": 48000,
+        "audio_channels": 2
+      },
+      "video_generations": {
+        "import": 0,
+        "composition": 1,
+        "concat": 0,
+        "final_mux": 0
+      }
+    },
+    {
+      "fixture": "test_portrait_source_video_ref0",
+      "artifact_count": 64,
+      "hashes_match": true,
+      "quality_passed": true,
+      "video": {
+        "check": "video-streams-captions",
+        "pass": true,
+        "width": 360,
+        "height": 640,
+        "fps": "30/1",
+        "duration_s": 0.8,
+        "caption_cues": 0,
+        "audio_codec": "aac",
+        "audio_sample_rate": 48000,
+        "audio_channels": 2
+      },
+      "video_generations": {
+        "import": 0,
+        "composition": 1,
+        "concat": 0,
+        "final_mux": 0
+      },
+      "pptx": {
+        "slides": 4,
+        "editable_shapes": 26,
+        "text_frames": 23,
+        "pictures": 0,
+        "native_paths": 2,
+        "embedded_movies": 3,
+        "narration_tracks": 0,
+        "animation": "fade",
+        "autoplay": true,
+        "transition": "fade"
+      }
+    }
+  ],
+  "browser_tests": {
+    "editor_journeys": 3,
+    "animation_pose_and_clip_selection": 3,
+    "backend": "Linux software Chromium"
+  },
+  "gpu_checks": {
+    "apple_m5": {
+      "webgl": "ANGLE Metal Renderer: Apple M5",
+      "webgpu": "apple / metal-3 / non-fallback",
+      "cad_parts": 7,
+      "focus_and_repeat_frame": "passed",
+      "scope": "viewer, not native macOS render backend",
+      "viewer_sha256": "975210729c10aa434216c6bbb3ef330f82395e55634cdd29620db4cb381391a5",
+      "context_lost": false,
+      "non_uniform_pixels": 14065,
+      "code_stage": "final 0.3.0 viewer rebuilt on Mac",
+      "live_editor_loaded": true
+    },
+    "nvidia_blackwell": {
+      "backend": "Vulkan",
+      "cad_parts": 7,
+      "visible_geometry_and_focus": "passed",
+      "webgpu": "nvidia / blackwell / non-fallback",
+      "webgl_hardware_identity": "empty vendor/renderer; unverified",
+      "default_backend": "viewer initialization failed",
+      "scope": "pre-release GPU viewer check; transient command-buffer errors recorded"
+    }
   },
   "limits": [
-    "one Linux x86_64 environment",
-    "no native macOS or Windows render",
-    "software Chromium; real WebGPU effect not verified",
-    "no head-to-head quality or performance benchmark"
-  ]
+    "Synthetic fixtures only; 4K60 sample is six frames (0.1 seconds), not a long-form stress test",
+    "PPTX native XML/media/animation structure checked; no desktop PowerPoint/Keynote/LibreOffice playback acceptance",
+    "Original HDR retained; final composition is SDR BT.709",
+    "No neural speech, image generation or reference-image reconstruction benchmark",
+    "No head-to-head artistic quality, expert-user or first-time usability comparison",
+    "Linux renderer; Mac is UI/preview/control client, not native CAD/video renderer"
+  ],
+  "previous_release": "verification-0.2.0.json"
 }

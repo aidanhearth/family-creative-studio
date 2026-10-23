@@ -31,6 +31,7 @@ export class HistoryManager {
   private future: UndoableAction[] = [];
   private isReplaying = false;
   private serializing: Promise<void> = Promise.resolve();
+  private generation = 0;
 
   private readonly capacity: number;
   private readonly onChange?: HistoryManagerOptions["onChange"];
@@ -57,19 +58,22 @@ export class HistoryManager {
   }
 
   clear(): void {
+    this.generation++;
     this.past.length = 0;
     this.future.length = 0;
     this.notifyChange();
   }
 
   async undo(): Promise<void> {
-    const operation = this.serializing.then(() => this.undoInternal());
+    const generation = this.generation;
+    const operation = this.serializing.then(() => generation === this.generation ? this.undoInternal() : undefined);
     this.serializing = operation.catch(() => {});
     return operation;
   }
 
   async redo(): Promise<void> {
-    const operation = this.serializing.then(() => this.redoInternal());
+    const generation = this.generation;
+    const operation = this.serializing.then(() => generation === this.generation ? this.redoInternal() : undefined);
     this.serializing = operation.catch(() => {});
     return operation;
   }
@@ -77,12 +81,14 @@ export class HistoryManager {
   private async undoInternal(): Promise<void> {
     const action = this.past.at(-1);
     if (!action) return;
+    const generation = this.generation;
     this.isReplaying = true;
     try {
       await action.revert();
     } finally {
       this.isReplaying = false;
     }
+    if (generation !== this.generation) return;
     this.past.pop();
     this.future.push(action);
     this.notifyChange();
@@ -91,12 +97,14 @@ export class HistoryManager {
   private async redoInternal(): Promise<void> {
     const action = this.future.at(-1);
     if (!action) return;
+    const generation = this.generation;
     this.isReplaying = true;
     try {
       await action.apply();
     } finally {
       this.isReplaying = false;
     }
+    if (generation !== this.generation) return;
     this.future.pop();
     this.past.push(action);
     this.notifyChange();

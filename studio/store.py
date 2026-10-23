@@ -91,6 +91,8 @@ class Store:
         manifest = Manifest.model_validate(p["manifest"])
         targets = targets_checked(manifest.output_targets if targets is None else targets)
         manifest.resolved()
+        from .preflight import contrast_checks
+        contrast_checks(manifest)
         from .media_assets import preflight
         preflight(self,manifest,targets)
         import hashlib

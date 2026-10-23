@@ -3,19 +3,19 @@
   "advisor": {
     "name": "星 (Gemini 4 Argon High)",
     "role": "Product Copy & Visual Design Direction",
-    "round": 2,
+    "round": 3,
     "mode": "offline_free_verifiable"
   },
   "appName": "暖紙造物台",
   "tagline": "單一尺寸母本，同步輸出互動頁、3D 模型、工程圖解、可編輯簡報與敘事短片",
-  "disclaimer": "本工具產出為概念幾何與結構示意，不代表結構承重、熱力學性能或量產工程簽核。",
+  "disclaimer": "本工具產出為概念幾何與結構示意，不代表結構承重、熱力學性能或量產工程簽核；工作台整合特定開源模組，不宣稱全面勝過 12 項原版工具或頂尖藝術家。",
   "emptyState": {
     "badge": "離線單一母本工作台",
     "title": "從一組可驗證的尺寸開始創作",
-    "description": "載入示範專案或輸入零件長寬高，工作台會以同一份幾何參數同步產生 3D 預覽、SVG 等角圖解、原生簡報與配音短片。",
+    "description": "載入示範專案或設定 7 種 CAD 幾何（含 STEP 匯入、旋轉、圓角、倒角與布林運算，最多 256 個零件與 256 個章節），工作台會以同一份參數同步產生 3D 預覽、SVG 等角圖解、原生可編輯簡報與混音敘事短片。",
     "primaryActionLabel": "載入「模組化手沖咖啡架」示範",
     "secondaryActionLabel": "建立空白尺寸專案",
-    "offlineHint": "目前為本機免費離線模式：3D 幾何、SVG 圖解、OOXML 簡報與合成旁白皆於本機確定性生成，不呼叫外部付費 API。"
+    "offlineHint": "目前為本機免費離線模式：STEP／STL／GLB 實體幾何、SVG 與 Archify 圖解、OOXML 原生簡報（含嵌入影片／旁白／動畫）及 eSpeak NG 草稿音質配音皆於本機確定性生成，不呼叫外部付費 API；擬真配音與生成式影像／3D 模型可由外部工具產出後匯入接續。"
   },
   "navigation": {
     "spineTitle": "敘事章節與工序",
@@ -25,27 +25,27 @@
       {
         "id": "stage_3d",
         "label": "3D 幾何舞台",
-        "shortHint": "檢視組件對齊、爆炸視角與淨空尺寸"
+        "shortHint": "檢視 7 種 CAD 幾何（含 STEP、旋轉、圓角、倒角與布林）、分解視角與聚焦零件"
       },
       {
         "id": "diagram_svg",
         "label": "SVG 尺寸圖解",
-        "shortHint": "正視、側視與俯視標註，檢查標籤零重疊"
+        "shortHint": "等角投影尺寸圖解與 11 種 Archify 架構／流程圖，支援聚焦零件層次"
       },
       {
         "id": "interactive_web",
         "label": "暖紙互動專題",
-        "shortHint": "結合章節敘事、尺寸表與嵌入式 3D 檢視"
+        "shortHint": "結合章節敘事、尺寸表、WebGPU／Canvas 光影與嵌入式 3D 檢視"
       },
       {
         "id": "slides_pptx",
         "label": "可編輯簡報",
-        "shortHint": "原生幾何框線、尺寸表格與講者備忘錄"
+        "shortHint": "原生 DrawingML 文字與路徑、三種版型，支援嵌入影片、章節旁白與進場動畫"
       },
       {
         "id": "video_edl",
         "label": "敘事短片預覽",
-        "shortHint": "依 EDL 剪輯清單對齊章節畫面、字幕與本機音軌"
+        "shortHint": "保留來源尺寸／fps 或輸出 720p／1080p／2160p，支援原音＋旁白混音、章節 WAV 與 EDL 時間軸"
       }
     ],
     "cameraPresets": {
@@ -63,7 +63,7 @@
     "toggleExploded": "切換分解視角",
     "resetCamera": "重設鏡頭角度",
     "exportWebHtml": "匯出互動網頁 (.html)",
-    "exportCadGlb": "匯出 3D 模型 (.glb / .step)",
+    "exportCadGlb": "匯出 3D 模型 (.glb / .step / .stl)",
     "exportDiagramSvg": "匯出尺寸圖解 (.svg)",
     "exportSlidesPptx": "匯出可編輯簡報 (.pptx)",
     "exportVideoMp4": "匯出敘事短片 (.mp4 + .edl.json)",
@@ -73,7 +73,7 @@
     "holeExceedsTray": {
       "code": "ERR_GEOM_APERTURE_OVERFLOW",
       "title": "濾杯圓孔直徑超出上托架安全邊界",
-      "message": "孔徑必須小於所選零件的寬與深。請修改孔徑或零件尺寸；這項檢查不代表結構強度已通過驗證。",
+      "message": "孔徑必須小於所選零件的寬與深（圓角與倒角亦須小於最窄邊之一半）。請修改孔徑或零件尺寸；這項檢查不代表結構強度已通過驗證。",
       "actionLabel": "還原為建議孔徑 (60mm)"
     },
     "partInterference": {
@@ -102,8 +102,8 @@
     },
     "emptyTranscriptFallback": {
       "code": "WARN_VID_SYNTHETIC_AUDIO",
-      "title": "未偵測到外部錄音，已啟用本機離線音軌與字幕",
-      "message": "依 VID-F03 保護規則，系統直接由三段章節旁白生成 SRT 字幕時間軸與本機合成提示音軌，確保影片可正常封裝。",
+      "title": "未指定外部錄音，已啟用本機 eSpeak NG 草稿音軌與字幕",
+      "message": "未匯入外部 WAV 時，系統直接由各章節旁白文字透過本機 eSpeak NG (cmn) 合成草稿音質語音並產生章節級 SRT 字幕時間軸；如需擬真人聲，可匯入全片或單章節 WAV 音檔。",
       "actionLabel": "檢視時間軸清單 (EDL)"
     },
     "pptxUnsafePathBlocked": {
@@ -265,7 +265,7 @@
       "不宣稱結構承重上限或材料力學強度",
       "不宣稱熱力學保溫或萃取風味提升",
       "不宣稱已完成工廠量產或模具公差簽核",
-      "不宣稱視覺品質超越人類設計師或頂尖藝術家"
+      "不宣稱全面勝過 12 項原版上游工具、人類設計師或頂尖藝術家，亦不宣稱未實測功能已通過驗收"
     ]
   },
   "ui": {
@@ -285,12 +285,12 @@
       "queued": "已排入工作佇列",
       "cache": "沿用已驗證之快取成品",
       "prepare": "準備工作目錄與母本快照",
-      "diagram": "繪製 Anatomy 等距圖解與 Archify 流程",
-      "cad": "建立 STEP / STL / GLB 實體幾何並重開驗算",
-      "slides": "封裝 PPT Master 原生可編輯簡報 (.pptx)",
+      "diagram": "繪製 CAD 投影 SVG 圖解與 Archify 架構／敘事流程圖",
+      "cad": "建立 7 種 CAD 實體與 STEP / STL / GLB 並重開驗算體積與邊界",
+      "slides": "封裝 PPT Master 原生文字／路徑簡報並嵌入影片、旁白與動畫 (.pptx)",
       "web": "生成暖紙互動專題網頁 (.html)",
-      "voice": "切分句子並合成章節旁白音軌",
-      "video": "合成 SRT 字幕、響度正規化與 720p 敘事短片",
+      "voice": "合成 eSpeak NG 草稿語音或載入全片／章節 WAV 並混音",
+      "video": "單代合成畫面與 SRT 字幕、雙階段響度正規化並封裝敘事短片",
       "verify": "執行跨格式尺寸、對比度與結構驗收",
       "complete": "檢查通過，成品已保存"
     },
@@ -298,32 +298,32 @@
       "contrast-ink": "主文字對比度達標（WCAG AA ≥ 4.5:1）",
       "contrast-muted": "次要文字對比度達標（WCAG AA ≥ 4.5:1）",
       "contrast-accent": "強調色對比度達標（WCAG AA ≥ 4.5:1）",
-      "glb-dimensions": "GLB 三維邊界與母本尺寸一致",
-      "glb-container": "GLB 封裝有效，包含網格且不依賴外部檔案",
-      "step-reimport": "STEP 實體重開驗證與扣除圓孔體積吻合",
-      "pptx-native-shapes": "PPTX 具備原生可編輯 DrawingML 圖形與文字框",
-      "video-streams-captions": "MP4 音視訊流、時長與 SRT 字幕段落完整"
+      "glb-dimensions": "GLB 三維邊界、體積與加工後 CAD 實體一致",
+      "glb-container": "GLB 封裝有效，保留零件語意 ID 且不依賴外部檔案",
+      "step-reimport": "STEP 實體重開驗證：旋轉、圓角、倒角與布林後體積與拓撲吻合",
+      "pptx-native-shapes": "PPTX 具備原生可編輯 DrawingML 文字框與路徑圖形，並核對嵌入影音與動畫設定",
+      "video-streams-captions": "MP4 解析度、畫格率、48kHz 雙聲道音軌、時長與 SRT 字幕段落完整"
     },
     "friendlyErrors": {
       "throughHoleOverflow": {
         "match": "The through-hole must fit inside its part",
         "title": "貫穿圓孔直徑超出零件長寬",
-        "message": "圓孔直徑（孔徑 mm）必須小於該零件的寬度與深度。請調小孔徑數值，或加大零件寬深後再按「套用修改」。"
+        "message": "圓孔直徑（孔徑 mm）必須小於該零件的寬度與深度。請調小孔徑數值，或加大零件寬深後再套用至草稿。"
       },
       "cylinderUnequalXY": {
-        "match": "A cylinder requires equal x/y diameters",
-        "title": "圓柱體需要相同的寬與深",
-        "message": "當零件類型為圓柱（cylinder）時，寬（X）與深（Y）代表直徑，兩者數值必須相同。請調整後再按「套用修改」。"
+        "match": "Circular parts require equal x/y diameters",
+        "title": "圓形截面零件需要相同的寬與深",
+        "message": "當零件類型為圓柱（cylinder）、圓錐（cone）、圓環（torus）或球體（sphere）時，寬（X）與深（Y）代表直徑，兩者數值必須相同（球體之高 Z 亦須相同；圓環管徑須小於外徑之一半）。"
       },
       "invalidNumber": {
         "match": "尺寸需要有效數字",
-        "title": "尺寸欄位需填入有效正數",
-        "message": "長寬高請輸入 1 至 1000 之間的有限數字（mm），孔徑請輸入 0 至 500 之間的數字（0 代表不開孔）。"
+        "title": "尺寸與幾何欄位需填入有效數字",
+        "message": "長寬高請輸入大於 0 至 1000 之間的有限數字（mm），座標為 -2000 至 2000 mm，孔徑、圓角與倒角請輸入 0 至 500 mm（圓角與倒角擇一且須小於最窄邊之一半）；單一作品最多支援 256 個零件與 256 個章節。"
       },
       "unknownDimensionToken": {
         "match": "Unknown dimension token",
         "title": "包含未定義的尺寸變數名稱",
-        "message": "文字中的 {{變數}} 名稱找不到對應零件。可用格式為 {{base.size}}、{{pillar.height}}、{{tray.bore}}，請於「專案 JSON」檢查零件 ID。"
+        "message": "文字中的 {{變數}} 名稱找不到對應零件。可用格式為 {{base.size}}、{{pillar.width}}、{{pillar.depth}}、{{pillar.height}}、{{tray.bore}}，請確認零件 ID 存在。"
       },
       "revisionConflict": {
         "match": "Revision conflict",
@@ -336,19 +336,19 @@
         "message": "請先點擊頂部「儲存」確認目前版本，再點擊「同步更新五種輸出」。"
       },
       "narrationTooLong": {
-        "match": "exceeds 30 seconds",
-        "title": "單段旁白語音超過 30 秒上限",
-        "message": "目前章節的旁白字數合成語音後超過 30 秒（全片上限 120 秒）。請精簡該段旁白文字後重新儲存並輸出。"
+        "match": "exceeds 600 seconds",
+        "title": "單段章節旁白超過 600 秒上限",
+        "message": "單一章節時長與旁白語音範圍為 0.1 至 600 秒（每章旁白文字上限 16 KiB，全片總時長上限 7200 秒）。請精簡該段旁白或拆分為多個章節後重新儲存並輸出。"
       },
       "wavFormatInvalid": {
-        "match": "WAV must be 1–120 seconds",
+        "match": "WAV must be 0.1–7200 seconds",
         "title": "匯入的 WAV 音檔規格不符",
-        "message": "請選擇 1 至 120 秒、單聲道或雙聲道、取樣率 8–96 kHz 且小於 24 MiB 的標準無壓縮 .wav 檔案。"
+        "message": "請選擇 0.1 至 7200 秒、單聲道或雙聲道、取樣率 8–192 kHz 且不超過 512 MiB 的標準無壓縮 PCM .wav 檔案（支援全片旁白或單章節獨立 WAV）。"
       },
       "wavDurationMismatch": {
-        "match": "Imported narration duration must match total beat duration within 0.5 seconds",
-        "title": "正式旁白 WAV 長度與章節總秒數不一致",
-        "message": "匯入的 WAV 音檔總長度需與所有章節設定秒數總和相差在 0.5 秒以內（預設 3 章節 × 7 秒 ＝ 21.0 秒）。請調整音檔長度或於「專案 JSON」修改各章節 duration。"
+        "match": "Narration WAV does not cover authored interval",
+        "title": "旁白 WAV 長度未涵蓋章節時間區間",
+        "message": "匯入的全片旁白 WAV 需涵蓋各配音章節在時間軸上的起訖秒數（穿插影片原音章節時仍保持既有時間軸偏移）；您亦可為個別章節單獨匯入章節 WAV。"
       },
       "contrastBelowAA": {
         "match": "text contrast",
@@ -367,48 +367,48 @@
       }
     },
     "fiveFormatsScope": {
-      "summary": "以單一尺寸與敘事母本（Manifest）同步驅動五種真實格式輸出，所有產物皆經過結構與數值驗收後才原子發布：",
+      "summary": "以單一尺寸與敘事母本（Manifest，支援最多 256 個零件與 256 個章節）同步驅動五種真實格式輸出，所有產物皆經過結構與數值驗收後才原子發布：",
       "formats": {
         "web": {
           "label": "暖紙互動專題 (index.html + viewer.js)",
-          "included": "內嵌完整尺寸母本、章節敘事、尺寸對照表與可拖曳/可三件分解的 Three.js 3D 預覽（無 WebGL 時自動退回 SVG 圖解）。",
-          "boundary": "純本機靜態打包，不載入外部網路字型或遠端追蹤腳本。"
+          "included": "內嵌完整尺寸母本、章節敘事、尺寸對照表、Paper Shaders（WebGPU／Canvas 2D 柔光與線性漸層光影）與可拖曳／可分解展開的 Three.js 3D 預覽（含 GLB 實體載入與聚焦零件高亮）。",
+          "boundary": "已完成純本機離線靜態打包，不載入外部網路字型或遠端追蹤腳本；圓角、倒角、布林與 STEP 零件透過本機實體 CAD 預覽或輸出之 GLB 呈現精確幾何。"
         },
         "diagram": {
-          "label": "工程圖解與流程 (anatomy.svg + workflow.html)",
-          "included": "由共用三維座標投影產生等距 SVG 圖解，並由 Archify 產生結構化章節敘事流程頁。",
-          "boundary": "支援具名方盒（box）、圓柱（cylinder）與貫穿圓孔（bore）組件；非通用自由曲面插畫軟體。"
+          "label": "工程圖解與架構流程 (anatomy.svg + workflow.html)",
+          "included": "由加工後之 CAD 實體三角網格與邊界投影產生等距 SVG 圖解（保留聚焦與非聚焦零件視覺層次），並透過 Archify 產生預設章節流程或 11 種結構化圖表（architecture、workflow、sequence、dataflow、lifecycle、erd、tree、class、timeline、waterfall、explainer）。",
+          "boundary": "已完成參數化三維投影與 11 種結構化圖表渲染；自由曲面插畫與互動式節點拖曳編輯規劃為後續擴充里程碑。"
         },
         "cad": {
           "label": "實體與網格幾何 (model.step + model.stl + model.glb)",
-          "included": "以獨立子程序呼叫 cadgen / build123d / OpenCASCADE 生成精準毫米級 STEP、STL 與 GLB，並強制重開 STEP 驗證體積與邊界框。",
-          "boundary": "僅代表概念幾何與組裝空間關係；不宣稱結構承重、材料強度、熱力學性能或量產模具公差。未部署任意圖片自動轉 3D 模型。"
+          "included": "以獨立子程序呼叫 cadgen / build123d / OpenCASCADE 生成 7 種 CAD 零件（box 長方體、cylinder 圓柱、sphere 球體、cone 圓錐／截錐、torus 圓環、extrusion 多邊形擠出、step 匯入上限 50 MiB 之 ISO-10303-21 STEP），支援 XYZ 旋轉、全邊圓角（fillet）、倒角（chamfer）、貫穿圓孔（bore）與世界座標布林運算（union／subtract／intersect），輸出毫米級 STEP、STL 與保留零件 ID 之 GLB，並重開 STEP 與核對 STL／GLB 驗算加工後體積與邊界框。",
+          "boundary": "已完成參數化實體建模、布林加工與 STEP 匯入驗算；結構承重、熱力學模擬、量產公差簽核與任意圖片轉 3D 模型則由外部專業工程軟體或生成式 3D 服務產出 STEP 後匯入接續。"
         },
         "slides": {
           "label": "原生可編輯簡報 (presentation.pptx)",
-          "included": "透過 PPT Master 將每章節 SVG 轉為原生 DrawingML 幾何形狀（p:sp / a:custGeom）、可編輯文字框（a:t）與講者備忘錄，並以 python-pptx 遞迴驗證群組內可編輯圖元。",
-          "boundary": "專注於清晰可改字的技術提案版型，不宣稱超越人類設計師或頂尖藝術家。"
+          "included": "透過 PPT Master 將各章節 SVG（支援 editorial 文字與圖解、full 全幅視覺、split 左右對照三種版型）轉為原生 DrawingML 幾何路徑（p:sp / a:custGeom）、可編輯文字框（a:t）與講者備忘錄，支援嵌入章節 MP4 影片（含裁切區間與自動播放）、嵌入章節 WAV 旁白音軌、換頁淡入（transition）與物件進場動畫（animation），並以 python-pptx 遞迴驗證可編輯圖元與媒體計數。",
+          "boundary": "已完成原生文字／路徑轉換與嵌入影片、旁白、動畫之可編輯簡報；專注於結構化技術提案版型，不宣稱全面勝過原版上游工具、人類設計師或頂尖視覺藝術家。"
         },
         "video": {
-          "label": "敘事短片與字幕 (film.mp4 + captions.srt + edit.edl.json)",
-          "included": "結合章節畫面、旁白音軌、燒錄中文字幕與 -16 LUFS 響度正規化，經 video-use 拼接輸出 1280×720 24fps MP4 與可稽核 EDL 清單。",
-          "boundary": "字幕採用章節級時間軸（beat-level timing），非語音辨識逐字對齊。"
+          "label": "敘事短片與可編輯時間軸 (film.mp4 + captions.srt + edit.edl.json)",
+          "included": "原檔保存上傳之 PNG（含透明通道與 ICC 色彩描述檔）／JPG／MP4／MOV 素材（上限 512 MiB，影片 0.1–7200 秒、最高 8192px／64MP／120fps，支援旋轉中繼資料與 HDR Hable 色調映射），可保留來源尺寸／fps 或指定 720p／1080p／2160p 與 24／25／30／50／60 fps（CRF 0–28）；支援章節旁白、影片原音、原音＋旁白混音（mix，可分別調整旁白與原音增益 0–2）及全片／單章節 WAV，經單代視訊合成燒錄中文字幕、雙階段 -16 LUFS 響度正規化與無損串流複製（stream copy）封裝 MP4，並提供可匯出／匯入之時間軸 JSON。",
+          "boundary": "已完成單代編碼合成、原音混音與章節級時間軸（beat-level timing）；語音辨識（ASR）逐字時間軸對齊與多軌特效剪輯可透過匯出之時間軸與外部音視訊工具鏈接續。"
         }
       },
       "auxiliaryOutputs": {
-        "imagePrompt": "影像風格參考（image-prompt.txt / image-brief.json）僅輸出含精確尺寸與色票之結構化提示詞供創作者參考，本機不呼叫任何付費生圖 API。",
-        "projectBundle": "完整作品包（project.zip）包含上述所有驗證產物、SHA-256 清單與第三方開源授權聲明（THIRD_PARTY/）。"
+        "imagePrompt": "影像風格參考（image-prompt.txt / image-brief.json）僅輸出含精確尺寸與色票之結構化提示詞供創作者交由外部生圖模型使用，本機不內建亦不自動呼叫付費生圖 API。",
+        "projectBundle": "完整作品包（project.zip）包含上述所有驗證產物、建置階段快取紀錄（build-stages.json）、SHA-256 清單與第三方開源授權聲明（THIRD_PARTY/）。"
       }
     },
     "voiceModeGuide": {
       "draftModeLabel": "eSpeak NG · 本機草稿配音（預設）",
-      "draftModeDescription": "未匯入外部音檔時，系統使用 VoiceStudio 內保留 MIT / Patter 授權標示的句子切段模組配合本機免費 eSpeak NG (cmn) 合成草稿語音，供離線核對影片段落節奏與字幕時間。本環境未安裝全套 VoiceStudio 深度學習語音權重，不宣稱擬真音質。",
-      "formalWavLabel": "已匯入正式旁白 WAV",
-      "formalWavDescription": "支援上傳您錄製或外部製作的無壓縮 .wav 音檔（1–120 秒、單/雙聲道、8–96 kHz、上限 24 MiB）。匯入音檔的總秒數需與各章節設定秒數（duration）總和相差在 ±0.5 秒內，系統將自動替換音軌並進行 -16 LUFS 響度正規化。"
+      "draftModeDescription": "未匯入外部 WAV 音檔時，系統直接呼叫本機免費 eSpeak NG (cmn) 依章節旁白文字合成草稿語音（eSpeak 草稿音質），供離線核對影片段落節奏、字幕時間與簡報旁白。本工作台未接入 VoiceStudio 句子切段模組，亦未內建深度學習語音克隆或 TTS 模型權重；如需擬真配音，可由外部語音模型或錄音工具生成 WAV 後匯入接續。",
+      "formalWavLabel": "已匯入正式旁白 WAV（支援全片／章節 WAV 與原音混音）",
+      "formalWavDescription": "支援上傳外部錄製或語音模型產出的無壓縮 PCM .wav 音檔（0.1–7200 秒、單／雙聲道、8–192 kHz、上限 512 MiB，原檔完整保存）。可設定全片旁白 WAV（穿插影片原音章節時仍保持既有時間軸偏移）或為個別章節指定專屬章節 WAV；章節聲音支援純旁白（voice）、影片原音（source）、原音＋旁白混音（mix，可個別調整音量倍率 0–2）與靜音（silent），並於輸出時執行雙階段 -16 LUFS 響度正規化。"
     },
     "dimensionTokenGuide": {
       "label": "尺寸變數自動連動說明",
-      "hint": "母本內文與旁白支援 {{base.size}}、{{pillar.height}}、{{tray.bore}} 等尺寸變數。左側一般輸入框會顯示解析後的實際數字（如 180×130×12）；只要您不手動改動文字框內容，修改下方零件尺寸時文字會自動同步更新。若要直接編輯 {{...}} 變數模板，請展開左下角「專案 JSON」。"
+      "hint": "作品標題、副標題與章節標題、內文、旁白皆可直接編輯並保留 {{base.size}}、{{pillar.width}}、{{pillar.depth}}、{{pillar.height}}、{{tray.bore}} 等尺寸變數。一般編輯時輸入框保留原始 {{...}} 變數表達式，下方即時預覽與右側畫布則同步顯示代入最新零件尺寸後的實際數值。"
     },
     "auditUiLabels": {
       "running": "正在執行 Impeccable WASM 視覺巡檢…",

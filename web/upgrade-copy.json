@@ -1,6 +1,6 @@
 {
   "workflowTitle": "從情境模板開始，局部修改零件、鏡頭與素材",
-  "workflowIntro": "選擇適合的創作模板，透過固定 ID 直接增刪零件與章節、穿插實拍片段或 3D 動態運鏡；僅改動文字時自動沿用既有 CAD 模型，不重複轉檔。",
+  "workflowIntro": "選擇適合的創作模板，透過穩定 ID 在本機草稿增刪與排序最多 256 個零件與 256 個章節、設定 7 種 CAD 幾何（含 STEP 匯入、旋轉、圓角、倒角與布林運算）、穿插實拍片段與原音＋旁白混音；僅改動文字或媒體時自動沿用既有 CAD 模型。",
   "newProject": {
     "buttonLabel": "新增作品",
     "dialogTitle": "建立新作品",
@@ -15,19 +15,19 @@
     "product_explainer": {
       "id": "product_explainer",
       "title": "器物尺寸與結構解說",
-      "description": "以尺寸母本同步產出圖解、STEP 實體、可編輯簡報與敘事短片。",
+      "description": "以單一尺寸母本設定 7 種 CAD 幾何或匯入 STEP，同步產出 SVG 圖解、STEP／STL／GLB 實體、原生可編輯簡報與敘事短片。",
       "defaultTitle": "模組化桌面器物概念設計"
     },
     "assembly_story": {
       "id": "assembly_story",
       "title": "工序組裝與分解指南",
-      "description": "依組裝順序逐章節高亮對應零件，搭配 3D 分解動畫與尺寸對照表，適合製作結構說明書與教學簡報。",
+      "description": "依組裝順序逐章節聚焦高亮對應零件，搭配 3D 環繞／分解動畫、尺寸對照表與嵌入影音動畫之原生簡報，適合製作結構說明書與教學提案。",
       "defaultTitle": "三件式組裝工序與空間核對"
     },
     "media_story": {
       "id": "media_story",
       "title": "實拍素材與幾何混剪敘事",
-      "description": "結合上傳的實拍圖片或影片裁切片段、3D 關鍵畫面與章節字幕旁白，輸出節奏完整的產品發表短片。",
+      "description": "結合原檔保存之實拍圖片或影片裁切片段（上限 512 MiB、0.1–7200 秒、保留來源尺寸／fps 或 720p／1080p／2160p）、原音＋旁白混音與章節 WAV，輸出單代合成之產品敘事短片。",
       "defaultTitle": "實拍與結構對照敘事短片"
     }
   },
@@ -45,9 +45,9 @@
     "trimStartLabel": "裁切起點 (秒)",
     "trimDurationLabel": "片段長度 (秒)",
     "audioSourceLabel": "本章節聲音來源",
-    "audioUseNarration": "使用章節旁白（草稿或匯入 WAV）",
+    "audioUseNarration": "使用章節旁白（eSpeak NG 草稿或全片／章節 WAV）",
     "audioUseClipOriginal": "使用上傳影片原音",
-    "audioMixBoth": "旁白為主、保留原片環境底音",
+    "audioMixBoth": "原音＋旁白混音（可個別調整音量倍率）",
     "cameraMotionLabel": "3D 鏡頭模式",
     "cameraStatic": "定格標準視角",
     "cameraOrbit": "水平環繞運鏡",
@@ -58,17 +58,17 @@
     "reuseCadNotice": "幾何未變動：本次直接沿用已驗證之 CAD 模型"
   },
   "emptyStates": {
-    "noCustomMedia": "本章節尚未上傳外部圖片或影片，輸出短片時將直接錄製同源 3D 場景或章節圖解。",
+    "noCustomMedia": "本章節尚未指定外部圖片或影片，輸出短片與簡報時將直接採用同源 3D 場景或章節 SVG 圖解。",
     "noRevisionDiff": "目前僅有一個已儲存版本（v1）。修改尺寸、文案或素材並再次儲存後，即可在此對照前後版本的數值與產物差異。",
-    "noPreviousOutput": "此作品尚未執行五端輸出。點擊右上角「同步更新五種輸出」即可產生網頁、3D、圖解、簡報與短片。",
-    "cadCacheReady": "零件尺寸與位置未變更，更新文案或影片素材時將自動沿用既有 STEP / STL / GLB 實體。"
+    "noPreviousOutput": "此作品尚未執行五端輸出。點擊右上角「同步更新五種輸出」即可產生網頁、STEP／STL／GLB、SVG／Archify 圖解、可編輯簡報與短片。",
+    "cadCacheReady": "零件尺寸、旋轉、圓角、倒角與布林設定未變更，更新文案、簡報版型或影音素材時將自動沿用既有 STEP / STL / GLB 實體。"
   },
   "errors": {
-    "duplicateId": "代號（ID）已存在，請使用不同的小寫英文與數字組合。",
-    "lastItemCannotDelete": "作品至少需保留一個零件與一個敘事章節，無法刪除最後一項。",
-    "missingFocusSolid": "章節聚焦的零件 ID 不存在，請重新勾選現有零件。",
-    "mediaFormatUnsupported": "僅支援標準 PNG／JPG 圖片與 MP4 影片，上限 50 MiB。",
-    "mediaTrimOutOfRange": "設定的「裁切起點＋片段長度」超出上傳影片的實際總長度，請縮短秒數或調前起點。",
+    "duplicateId": "代號（ID）已存在，請使用不同的小寫英文與數字組合（單一作品最多支援 256 個零件與 256 個章節）。",
+    "lastItemCannotDelete": "作品至少需保留一個敘事章節；若啟用 CAD 輸出或 3D 動態運鏡，請至少保留一個非布林工具之交付零件。",
+    "missingFocusSolid": "章節聚焦的零件 ID 不存在或已設為布林工具零件，請重新勾選現有交付零件。",
+    "mediaFormatUnsupported": "僅支援標準 PNG／JPG 圖片（最高 64MP）與 MP4／MOV 影片（0.1–7200 秒、單邊最高 8192px、120fps），單檔上限 512 MiB。",
+    "mediaTrimOutOfRange": "設定的「裁切起點＋片段長度」超出上傳影片的實際總長度（0.1–7200 秒），請縮短秒數或調前起點。",
     "clipHasNoAudio": "素材不含音軌，請選擇章節旁白或靜音。",
     "cameraRequires3d": "本章節已指定顯示外部上傳素材，若要啟用 3D 動態運鏡，請先切換回 3D 場景模式。",
     "revisionDiffUnavailable": "找不到指定比較的歷史版本，請重新整理版本清單。"

@@ -1,20 +1,40 @@
 import fs from 'node:fs';
-import {fitProjection,boxCorners,roundedPlan,extrude,circleRing,depthOf,iso,pathOf} from '../vendor/wheresryan22--anatomy/iso-kit.mjs';
-const [manifestPath, output] = process.argv.slice(2);
-const m=JSON.parse(fs.readFileSync(manifestPath,'utf8'));
-const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
-const parts=m.solids;
-const points=parts.flatMap(s=>{let [w,d,h]=s.size,[x,y,z]=s.position; return boxCorners({x:x-w/2,y:y-d/2,w,d},z-h/2,z+h/2);});
-const proj=fitProjection(points.length?points:[[0,0,0],[100,100,100]],760,560,{pad:60});
-let body='';
-for(const s of [...parts].sort((a,b)=>depthOf(a.position,proj)-depthOf(b.position,proj))){
- const [w,d,h]=s.size,[x,y,z]=s.position;
- const ring=s.kind==='cylinder'?circleRing(x,y,w/2,64):roundedPlan({x:x-w/2,y:y-d/2,w,d,r:0});
- const p=extrude(ring,z-h/2,h,proj);
- body+=`<g id="solid-${esc(s.id)}"><path d="${p.fill}" fill="${s.color}" stroke="${m.brand.ink}" stroke-width="1.3"/>`;
- p.shades.forEach((d,i)=>{if(d)body+=`<path d="${d}" fill="#000000" opacity="${.04+i*.055}"/>`;});
- body+=`<path d="${p.top}" fill="#ffffff" opacity="0.16"/><path d="${p.crease}" fill="none" stroke="${m.brand.ink}" stroke-width="0.7" opacity="0.55"/>`;
- if(s.bore){ const p2=circleRing(x,y,s.bore/2,64).map(([a,b])=>iso([a,b,z+h/2+.01],proj));body+=`<path d="${pathOf(p2,true)}" fill="${m.brand.paper}" stroke="${m.brand.ink}" stroke-width="1"/>`; }
- body+='</g>';
+import path from 'node:path';
+import {fitProjection, depthOf, iso, pathOf} from '../vendor/wheresryan22--anatomy/iso-kit.mjs';
+
+// Geometry is the actual post-boolean, post-fillet CAD tessellation. Never
+// substitute primitive boxes for STEP imports, curved shapes or rotations.
+const [manifestPath, output, geometryPath, focusJSON = '[]'] = process.argv.slice(2);
+const m = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+const focus = new Set(JSON.parse(focusJSON));
+const visible = m.solids.filter(s => !s.construction);
+const geometry = visible.length ? JSON.parse(fs.readFileSync(geometryPath || path.join(path.dirname(manifestPath), 'geometry.json'), 'utf8')) : {parts: []};
+if (geometry.parts.length !== visible.length || visible.some(s => !geometry.parts.some(p => p.id === s.id))) throw new Error('CAD projection part identity does not match document');
+const esc = s => String(s).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+const points = geometry.parts.flatMap(p => p.vertices);
+const proj = fitProjection(points.length ? points : [[0, 0, 0], [100, 100, 100]], 760, 560, {pad: 60});
+const subtract = (a, b) => a.map((x, i) => x - b[i]);
+const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+const dot = (a, b) => a.reduce((sum, x, i) => sum + x * b[i], 0);
+const camera = [Math.sqrt(3 / 8), Math.sqrt(3 / 8), .5];
+const light = [-.25, -.4, .88];
+const faces = [];
+for (const part of geometry.parts) {
+  const base = [1, 3, 5].map(i => parseInt(part.color.slice(i, i + 2), 16));
+  const paper = [1, 3, 5].map(i => parseInt(m.brand.paper.slice(i, i + 2), 16));
+  for (const tri of part.triangles) {
+    const vertices = tri.map(i => part.vertices[i]);
+    if (vertices.some(v => !v || v.length !== 3 || !v.every(Number.isFinite))) throw new Error('Invalid CAD tessellation vertices');
+    const normal = cross(subtract(vertices[1], vertices[0]), subtract(vertices[2], vertices[0]));
+    const length = Math.hypot(...normal);
+    if (!length || dot(normal, camera) <= 0) continue;
+    const shade = .76 + .24 * Math.max(0, dot(normal.map(v => v / length), light));
+    const muted = focus.size && !focus.has(part.id);
+    const color = '#' + base.map((c, i) => Math.round(muted ? c * shade * .22 + paper[i] * .78 : c * shade).toString(16).padStart(2, '0')).join('');
+    const center = [0, 1, 2].map(i => vertices.reduce((sum, v) => sum + v[i], 0) / 3);
+    faces.push({part, color, points: vertices.map(v => iso(v, proj)), depth: depthOf(center, proj)});
+  }
 }
-fs.writeFileSync(output,`<svg xmlns="http://www.w3.org/2000/svg" width="760" height="560" viewBox="0 0 760 560" role="img" aria-label="${esc(m.title)}"><title>${esc(m.title)} — Anatomy projection</title><rect width="760" height="560" fill="${m.brand.paper}"/>${body}</svg>`);
+faces.sort((a, b) => a.depth - b.depth);
+const body = faces.map(f => `<path data-part-id="${esc(f.part.id)}" d="${pathOf(f.points, true)}" fill="${f.color}" stroke="${f.color}" stroke-width="0.25" stroke-linejoin="round"${focus.size && !focus.has(f.part.id) ? ' data-focus-state="muted"' : ''}/>`).join('');
+fs.writeFileSync(output, `<svg xmlns="http://www.w3.org/2000/svg" width="760" height="560" viewBox="0 0 760 560" role="img" aria-label="${esc(m.title)}"><title>${esc(m.title)} — CAD tessellation projection</title><desc>Millimetre geometry projected from the validated CAD model. Focus: ${esc([...focus].join(', ') || 'all parts')}.</desc><rect width="760" height="560" fill="${m.brand.paper}"/><g id="cad-projection">${body}</g></svg>`);

@@ -1,13 +1,13 @@
 # Family Creative Studio
 
-**Version:** 0.2.0 | **Port:** 8765 (loopback only) | **Stack:** Python 3.11, FastAPI, SQLite, Three.js, FFmpeg, OpenCASCADE
+**Version:** 0.3.0 | **Port:** 8765 (loopback only) | **Stack:** Python 3.11, FastAPI, SQLite, Three.js, FFmpeg, OpenCASCADE
 
 ## What
-A local manifest-driven workbench producing web, SVG, CAD, editable PPTX elements and short videos. It integrates selected upstream mechanisms, not twelve complete applications; read `docs/COMPARISON.md` before describing capability.
+A local manifest-driven workbench for web, vectors, CAD, editable presentations and video. Twelve upstreams were researched; selected mechanisms/data from eleven are used. Read `docs/COMPARISON.md` before claiming parity or quality advantages.
 
 ## Quick Start
 
-Install Linux prerequisites from README.md, then:
+Install the Linux prerequisites in README.md, then:
 
 ```bash
 ./setup.sh
@@ -15,24 +15,26 @@ Install Linux prerequisites from README.md, then:
 .venv/bin/python -m pytest -q
 ```
 
-Open http://127.0.0.1:8765/. Target Ubuntu 24.04/Linux x86_64; rendering requires usable Bubblewrap namespaces and Chrome/Chromium. Native macOS/Windows rendering is unsupported.
+Open http://127.0.0.1:8765/. The renderer targets Ubuntu 24.04/Linux x86_64 with usable Bubblewrap namespaces and Chrome/Chromium. A Mac can control it through a loopback SSH tunnel; native macOS/Windows rendering is unsupported. See the agent guide.
 
 ## Commands
 
 ```bash
-./setup.sh                                          # Install locked dependencies, build, fetch two pinned sources
-npm run build                                       # Bundle browser code
+./setup.sh                                          # Locked dependencies, browser build, two pinned upstreams
+npm run build                                       # Browser bundle
 npm test                                            # JavaScript tests
 .venv/bin/python -m pytest -q                        # Python tests
-.venv/bin/family-studio doctor                       # Availability and limitations
-.venv/bin/family-studio schema                       # Manifest JSON schema
-.venv/bin/family-studio recipes                      # Discover recipe IDs
-.venv/bin/family-studio create assembly_story sample  # New project; ID must not exist
-.venv/bin/family-studio get sample                   # Read manifest and current revision
-.venv/bin/family-studio preflight sample             # Check required scene assets
+.venv/bin/family-studio doctor                       # Availability and limits
+.venv/bin/family-studio schema                       # Current manifest JSON schema
+.venv/bin/family-studio recipes                      # Recipe IDs
+.venv/bin/family-studio create assembly_story sample  # New ID required
+.venv/bin/family-studio get sample                   # Current manifest and revision
+.venv/bin/family-studio assets                       # Imported original asset metadata
+.venv/bin/family-studio timeline sample              # Editable timeline interchange
+.venv/bin/family-studio preflight sample             # Asset, trim and contrast checks
 .venv/bin/family-studio render sample --targets diagram cad slides --wait
-.venv/bin/family-studio mcp                          # MCP stdio server
-.venv/bin/python scripts/bootstrap_sources.py --all  # Optional research sources, no models/LFS
+.venv/bin/family-studio mcp                          # 19 tools over stdio
+.venv/bin/python scripts/bootstrap_sources.py --all  # Optional research checkouts, no models/LFS
 ```
 
 No standalone lint, coverage or Docker workflow is configured.
@@ -40,43 +42,44 @@ No standalone lint, coverage or Docker workflow is configured.
 ## Architecture
 
 ```text
-studio/       Schema, revision store, APIs, worker, render stages and MCP
-web/          Browser editor, viewer and interface copy
-scripts/      Browser build, pinned source bootstrap and geometry helpers
-vendor/       Selected upstream files, licenses and source hash manifest
-examples/     Public example data
-tests/        Python and JavaScript checks
-docs/         Agent guide, comparison and security boundaries
+studio/       Schemas, revision store, APIs, CAD/media workers, exports and MCP
+web/          Editor, scene viewer and effects
+scripts/      Build, source bootstrap and geometry/scene inspection
+vendor/       Selected upstream files, licenses and source hashes
+examples/     Public example inputs
+tests/        Python, JavaScript and browser checks
+docs/         Agent guide, comparisons, verification and security boundaries
 ```
 
-CLI, HTTP and MCP share `Store`; edits validate a Manifest and compare revisions. A worker renders immutable snapshots, verifies artifacts and reuses matching stage caches. `.state`, `.sources`, `.venv` and generated `dist` are local and excluded from Git.
+CLI, HTTP and MCP share `Store`; validated edits use revision checks. Workers render immutable snapshots, verify artifact hashes and reuse verified stage caches. CAD solids and an imported visual GLB are independent sources; never describe the GLB as converted to STEP. Draft CAD previews use the same kernel and verify their input/output hashes.
 
 ## Key Files
 
-- `studio/schema.py`: bounded document and cross-reference validation.
+- `studio/schema.py`: geometry, scene, timeline and output settings.
 - `studio/operations.py`: stable-ID atomic edits and semantic differences.
-- `studio/store.py`: revisions, jobs and artifact bookkeeping.
-- `studio/pipeline.py`: export orchestration.
-- `studio/server.py`: local HTTP application.
-- `studio/mcp_server.py`: stdio tools for agents.
-- `studio/diagnostics.py`: environment checks and capability limits.
-- `vendor/sources.lock.json`: pinned upstream commits and file hashes.
-- `setup.sh`: first-time bootstrap and readiness check.
+- `studio/geometry_kernel.py`: direct build123d/OpenCASCADE construction.
+- `studio/geometry_preview.py`: unsaved exact CAD previews and cache receipts.
+- `studio/media_assets.py`: preserved original imports and preflight checks.
+- `studio/timeline.py`: revision- and source-hash-protected timeline exchange.
+- `studio/pipeline.py`: cross-format export and verification.
+- `studio/ppt_worker.py`: structured native slides and embedded media.
+- `studio/mcp_server.py`: stdio interface.
+- `vendor/sources.lock.json`: pinned sources and vendored hashes.
 
 ## Configuration
 
-Environment variables are optional; `.env.example` is documentation, not automatically loaded.
+Optional environment variables; `.env.example` is not loaded automatically.
 
 | Variable | Required | Description |
 |---|---|---|
-| `STUDIO_DATA` | No | State directory; defaults to project `.state` |
+| `STUDIO_DATA` | No | State/assets/cache; defaults to project `.state` |
 | `STUDIO_SOURCES` | No | Pinned checkouts; defaults to project `.sources` |
 | `STUDIO_BROWSER` | No | Explicit Chrome/Chromium executable |
-| `PYTHON_BIN` | No | Python 3.11 executable when setup cannot use `uv` |
+| `PYTHON_BIN` | No | Python 3.11 for setup when `uv` is unavailable |
 
 ## Working Rules
 
-Read the current revision before updating. Preview patches with `--dry-run`, then submit with that revision; a conflict requires rereading, not overwriting. Use `preflight` before rendering; report actual job status and artifact paths. Never claim image generation, voice cloning or arbitrary image-to-3D is implemented. Keep user media, state, credentials and machine-specific paths out of commits; retain upstream notices and hashes. See `docs/SECURITY.md` for sandbox limits.
+Read revisions before editing; preview patches, then submit the same expected revision. Up to 2,048 operations form one atomic edit; CLI/HTTP JSON is bounded to 16 MiB. Discover limits through the schema rather than treating maxima as performance guarantees. Check preflight and actual job results. Preserve originals, licenses and source hashes; exclude user state, media and private machine details from Git. Do not claim ASR, image generation, voice cloning, GLB-to-CAD conversion or all-upstream superiority. Read `docs/SECURITY.md` before changing execution boundaries.
 
 ## Contributing
 

@@ -1,1 +1,267 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>暖紙造物台</title><link rel="stylesheet" href="/static/app.css"></head><body><header><a class="wordmark" href="/">暖紙<span>造物台</span></a><div class="project-head"><span class="eyebrow">FAMILY CREATIVE STUDIO</span><span id="project-name" hidden></span><select id="projects" aria-label="選擇作品"></select><button id="new-project" class="quiet">新增作品</button></div><button id="save" class="quiet">儲存</button><button id="render" class="primary">同步更新五種輸出 <span>↗</span></button></header><div id="notice" role="status" aria-live="polite"></div><main><aside class="spine"><div class="section-label">01 / 敘事章節與工序</div><nav id="beats"></nav><div class="toolbar"><button id="add-beat" class="quiet">＋ 新增章節</button><button id="remove-beat" class="quiet">刪除章節</button><button id="beat-up" class="quiet" aria-label="章節上移">↑</button><button id="beat-down" class="quiet" aria-label="章節下移">↓</button></div><div class="section-label">02 / 尺寸參數</div><form id="editor"><details open id="text-settings"><summary>章節文字</summary><label>作品名稱<input id="title" maxlength="48"></label><label>章節標題<input id="beat-title" maxlength="28"></label><label>內文<textarea id="beat-body" maxlength="85"></textarea></label><label>旁白<textarea id="beat-narration" maxlength="300"></textarea></label><p class="hint">未改動內文與旁白時，尺寸數字會自動連動。編輯變數模板請展開「專案 JSON」。</p></details><details id="scene-settings"><summary>鏡頭、聲音與素材</summary><label>章節最短秒數<input id="duration" type="number" min="3" max="30" step="0.5"></label><label>鏡頭模式<select id="visual-mode"><option value="diagram">章節圖解</option><option value="orbit">水平環繞運鏡</option><option value="explode">零件分解展開</option><option value="image">上傳圖片</option><option value="clip">上傳影片</option></select></label><label>章節素材<select id="scene-asset"><option value="">尚未匯入素材</option></select></label><label>裁切起點（秒）<input id="trim-start" type="number" min="0" max="120" step="0.1" value="0"></label><label>本章節聲音<select id="scene-audio"><option value="voice">使用章節旁白</option><option value="source">使用影片原音</option><option value="silent">靜音</option></select></label><label class="upload">上傳章節圖片／影片<input id="media" type="file" accept=".png,.jpg,.jpeg,.mp4"></label><p id="media-state" class="hint">PNG／JPG／MP4 · 上限 50 MiB</p></details><label>色票<select id="preset"></select></label><details id="part-settings"><summary>零件與尺寸</summary><label>零件<select id="solid"></select></label><label>零件名稱<input id="solid-name" maxlength="200"></label><label>零件形狀<select id="solid-kind"><option value="box">長方體</option><option value="cylinder">圓柱體</option></select></label><div class="toolbar"><button id="add-solid" type="button" class="quiet">＋ 新增零件</button><button id="remove-solid" type="button" class="quiet">刪除零件</button></div><div class="dims"><label>寬 mm<input id="dim-0" type="number" min="1" max="1000"></label><label>深 mm<input id="dim-1" type="number" min="1" max="1000"></label><label>高 mm<input id="dim-2" type="number" min="1" max="1000"></label></div><div class="dims"><label>X mm<input id="pos-0" type="number" min="-2000" max="2000"></label><label>Y mm<input id="pos-1" type="number" min="-2000" max="2000"></label><label>Z mm<input id="pos-2" type="number" min="-2000" max="2000"></label></div><label>孔徑 mm<input id="bore" type="number" min="0" max="500"></label></details><button type="submit" class="wide quiet">套用修改</button></form><div class="history"><button id="undo" class="quiet">↶ 復原</button><button id="redo" class="quiet">重做 ↷</button></div><details><summary>正式旁白 WAV</summary><p class="hint">匯入音檔後，長度需符合章節總時長。未匯入時使用 eSpeak NG 草稿配音。</p><input id="audio" type="file" accept=".wav"><p id="audio-state"></p></details><details><summary>影像風格參考</summary><select id="image-style"></select><p class="hint" id="style-description"></p></details><details><summary>專案 JSON</summary><textarea id="json-editor" rows="10" aria-label="專案 JSON"></textarea><button id="apply-json" class="quiet">套用 JSON</button></details></aside><section class="canvas"><div class="canvas-title"><div><p class="eyebrow">CONCEPT STUDY / MILLIMETERS</p><h1 id="beat-heading"></h1></div><span id="revision" class="pill"></span></div><div class="tabs" role="tablist"><button data-view="3d" class="active" role="tab">3D 幾何舞台</button><button data-view="diagram" role="tab">SVG 圖解</button><button data-view="web" role="tab">互動專題</button><button data-view="slides" role="tab">簡報</button><button data-view="video" role="tab">敘事短片</button></div><div class="stage"><canvas id="paper-effect" aria-hidden="true"></canvas><div id="viewer"></div><div id="preview" hidden></div><div class="stage-meta"><span id="stage-label">PARAMETRIC / mm</span><button id="explode" class="quiet">零件分解 ↗</button></div></div><div class="caption"><span class="caption-index">NARRATION</span><p id="caption-text"></p></div><div class="canvas-footer"><span id="draft-status">尺寸母本</span><button id="scene-play" class="quiet">▶ 預覽運鏡</button><button id="audit" class="quiet">視覺巡檢</button><label class="fx-toggle"><input type="checkbox" id="fx"> 光影</label><span id="fx-status" class="hint"></span></div><div id="audit-result" class="hint"></div></section><aside class="results"><div class="section-label">03 / 作品輸出</div><details id="output-settings"><summary>選擇輸出格式</summary><label><input type="checkbox" data-target="web"> 互動網頁</label><label><input type="checkbox" data-target="diagram"> SVG 圖解與流程</label><label><input type="checkbox" data-target="cad"> STEP／STL／GLB</label><label><input type="checkbox" data-target="slides"> 可編輯簡報</label><label><input type="checkbox" data-target="video"> 敘事短片</label></details><p class="hint" id="job-state"></p><div id="artifact-list"></div><div class="job-actions"><button id="cancel" class="quiet" hidden>取消製作</button><button id="retry" class="quiet" hidden>重試此版本</button></div><div class="section-label">04 / 品質檢查</div><div id="quality"></div><p id="reuse-state" class="hint"></p><button id="compare" class="quiet">比較前後版本差異</button><div id="comparison" class="comparison" hidden></div><p class="hint" id="scope"></p><details><summary>原始引擎與狀態</summary><div id="capabilities"></div></details></aside></main><footer><span>一份母本，五種作品。</span><span id="footnote"></span></footer><dialog id="create-dialog"><form method="dialog" id="create-form"><p class="eyebrow">NEW PROJECT</p><h2>建立新作品</h2><label>選擇創作模板<select id="recipe"></select></label><p class="hint" id="recipe-description"></p><label>作品名稱<input id="create-title" maxlength="48" required></label><label>作品代號<input id="create-id" pattern="[a-z][a-z0-9_-]{0,47}" maxlength="48" required></label><div class="toolbar"><button type="button" id="close-create" class="quiet">取消</button><button type="submit" class="primary">建立並載入模板</button></div></form></dialog><script src="/static/app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>暖紙造物台</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<header>
+<a class="wordmark" href="/">暖紙<span>造物台</span>
+</a>
+<div class="project-head">
+<span class="eyebrow">FAMILY CREATIVE STUDIO</span>
+<span id="project-name" hidden>
+</span>
+<select id="projects" aria-label="選擇作品">
+</select>
+<button id="new-project" class="quiet">新增作品</button>
+</div>
+<button id="save" class="quiet">儲存</button>
+<button id="render" class="primary">同步更新五種輸出 <span>↗</span>
+</button>
+</header>
+<div id="notice" role="status" aria-live="polite">
+</div>
+<main>
+<aside class="spine">
+<div class="section-label">01 / 敘事章節與工序</div>
+<nav id="beats">
+</nav>
+<div class="toolbar">
+<button id="add-beat" class="quiet">＋ 新增章節</button>
+<button id="remove-beat" class="quiet">刪除章節</button>
+<button id="beat-up" class="quiet" aria-label="章節上移">↑</button>
+<button id="beat-down" class="quiet" aria-label="章節下移">↓</button>
+</div>
+<div class="section-label">02 / 尺寸參數</div>
+<form id="editor">
+<details open id="text-settings">
+<summary>章節文字</summary>
+<label>作品名稱<input id="title" maxlength="48">
+</label>
+<label>作品副標題<textarea id="subtitle" maxlength="140"></textarea></label>
+<label>章節標題<input id="beat-title" maxlength="28">
+</label>
+<label>內文<textarea id="beat-body" maxlength="85">
+</textarea>
+</label>
+<label>旁白<textarea id="beat-narration" maxlength="16384">
+</textarea>
+</label>
+<p class="hint">直接編輯 {{零件代號.size}}、{{零件代號.width}} 等尺寸變數。右側與下方即時呈現數值，文字修改保留連動。</p><div class="expression-preview" aria-live="polite"><span>內文預覽</span><p id="body-preview"></p><span>旁白預覽</span><p id="narration-preview"></p></div>
+</details>
+<details id="scene-settings">
+<summary>鏡頭、聲音與素材</summary>
+<label>章節時長（秒）<input id="duration" type="number" min="0.1" max="600" step="0.1">
+</label>
+<label>鏡頭模式<select id="visual-mode">
+<option value="diagram">章節圖解</option>
+<option value="orbit">水平環繞運鏡</option>
+<option value="explode">零件分解展開</option>
+<option value="image">上傳圖片</option>
+<option value="clip">上傳影片</option>
+</select>
+</label>
+<label>原生 SVG 來源<select id="beat-svg-asset"><option value="">使用產生的圖解</option></select></label><label class="upload">匯入可編輯 SVG<input id="svg-import" type="file" accept=".svg,image/svg+xml"></label>
+<label>章節素材<select id="scene-asset">
+<option value="">尚未匯入素材</option>
+</select>
+</label>
+<label>裁切起點（秒）<input id="trim-start" type="number" min="0" max="7200" step="0.1" value="0">
+</label>
+<label>本章節聲音<select id="scene-audio">
+<option value="voice">使用章節旁白</option>
+<option value="source">使用影片原音</option>
+<option value="mix">旁白＋原片混音</option>
+<option value="silent">靜音</option>
+</select>
+</label>
+<div class="two-fields"><label>旁白音量<input id="voice-gain" type="number" min="0" max="2" step="0.05"></label><label>原片音量<input id="source-gain" type="number" min="0" max="2" step="0.05"></label></div><label>本章旁白 WAV<select id="beat-audio-asset"></select></label><label class="upload">匯入本章旁白<input id="beat-audio" type="file" accept=".wav"></label><fieldset class="focus-field"><legend>聚焦零件</legend><div id="beat-focus"></div></fieldset><label>本章版型<select id="beat-layout"><option value="">沿用整體設定</option><option value="editorial">文字與圖解</option><option value="full">全幅視覺</option><option value="split">左右對照</option></select></label>
+<label class="upload">上傳章節圖片／影片<input id="media" type="file" accept=".png,.jpg,.jpeg,.mp4,.mov">
+</label>
+<p id="media-state" class="hint">PNG／JPG／MP4／MOV · 保留原檔</p>
+</details>
+<details id="scene-import-settings"><summary>完整 3D 場景</summary><label class="upload">匯入 GLB（材質與動畫）<input id="scene-import" type="file" accept=".glb"></label><label>選用場景<select id="imported-scene"><option value="">使用參數 CAD 零件</option></select></label><label>播放動畫（單一片段）<select id="scene-animation" disabled><option value="0">無動畫</option></select></label><p id="scene-import-state" class="hint">GLB 場景與 CAD 零件是獨立來源；選用 GLB 保留零件並預設關閉 CAD 輸出。</p></details>
+<label>色票<select id="preset">
+</select>
+</label>
+<details id="part-settings">
+<summary>零件與尺寸</summary>
+<label>零件<select id="solid">
+</select>
+</label>
+<label>零件名稱<input id="solid-name" maxlength="200">
+</label>
+<label>零件形狀<select id="solid-kind">
+<option value="box">長方體</option>
+<option value="cylinder">圓柱體</option><option value="sphere">球體</option><option value="cone">圓錐／截錐</option><option value="torus">圓環</option><option value="extrusion">多邊形擠出</option><option value="step">匯入 STEP</option>
+</select>
+</label>
+<div class="toolbar">
+<button id="add-solid" type="button" class="quiet">＋ 新增零件</button>
+<button id="remove-solid" type="button" class="quiet">刪除零件</button><button id="solid-up" type="button" class="quiet" aria-label="零件上移">↑</button><button id="solid-down" type="button" class="quiet" aria-label="零件下移">↓</button>
+</div>
+<div class="dims">
+<label>寬 mm<input id="dim-0" type="number" min="0" max="1000" step="any" required>
+</label>
+<label>深 mm<input id="dim-1" type="number" min="0" max="1000" step="any" required>
+</label>
+<label>高 mm<input id="dim-2" type="number" min="0" max="1000" step="any" required>
+</label>
+</div>
+<div class="dims">
+<label>X mm<input id="pos-0" type="number" min="-2000" max="2000" step="any">
+</label>
+<label>Y mm<input id="pos-1" type="number" min="-2000" max="2000" step="any">
+</label>
+<label>Z mm<input id="pos-2" type="number" min="-2000" max="2000" step="any">
+</label>
+</div>
+<div class="dims"><label>X 旋轉°<input id="rot-0" type="number" min="-2000" max="2000" step="any"></label><label>Y 旋轉°<input id="rot-1" type="number" min="-2000" max="2000" step="any"></label><label>Z 旋轉°<input id="rot-2" type="number" min="-2000" max="2000" step="any"></label></div><label>零件顏色<input id="solid-color" type="color"></label><div class="two-fields"><label>圓角 mm<input id="fillet" type="number" min="0" max="500" step="any"></label><label>倒角 mm<input id="chamfer" type="number" min="0" max="500" step="any"></label></div><label id="cone-settings">頂面直徑 mm<input id="top-diameter" type="number" min="0" max="1000" step="any"></label><label id="profile-settings">擠出輪廓（正規化 XY 點）<textarea id="solid-profile" placeholder="[[-0.5,-0.5],[0.5,-0.5],[0.5,0.5],[-0.5,0.5]]"></textarea></label><label class="check"><input id="construction" type="checkbox"> 布林運算工具（不單獨輸出）</label><label>布林運算<textarea id="solid-booleans" placeholder='[{"operation":"subtract","tool":"tool-id"}]'></textarea></label><p class="hint">工具零件須排在被加工零件前方；可選 union、subtract、intersect。圓角、倒角與布林以實體 CAD 預覽。</p><label class="upload">匯入 STEP 零件<input id="cad-import" type="file" accept=".step,.stp"></label><p id="cad-state" class="hint"></p>
+<label>孔徑 mm<input id="bore" type="number" min="0" max="500" step="any">
+</label>
+</details>
+<button type="submit" class="wide quiet">套用至草稿</button>
+</form>
+<div class="history">
+<button id="undo" class="quiet">↶ 復原</button>
+<button id="redo" class="quiet">重做 ↷</button>
+</div>
+<details>
+<summary>正式旁白 WAV</summary>
+<p class="hint">匯入音檔後，長度需符合章節總時長。未匯入時使用 eSpeak NG 草稿配音。</p>
+<input id="audio" type="file" accept=".wav">
+<p id="audio-state">
+</p>
+</details>
+<details>
+<summary>影像風格參考</summary>
+<select id="image-style">
+</select>
+<p class="hint" id="style-description">
+</p>
+</details>
+<details>
+<summary>專案 JSON</summary>
+<textarea id="json-editor" rows="10" aria-label="專案 JSON">
+</textarea>
+<button id="apply-json" class="quiet">套用 JSON</button>
+</details>
+</aside>
+<section class="canvas">
+<div class="canvas-title">
+<div>
+<p class="eyebrow">CONCEPT STUDY / MILLIMETERS</p>
+<h1 id="beat-heading">
+</h1>
+</div>
+<span id="revision" class="pill">
+</span>
+</div>
+<div class="tabs" role="tablist">
+<button data-view="3d" class="active" role="tab">創作預覽</button>
+<button data-view="diagram" role="tab">SVG 圖解</button>
+<button data-view="web" role="tab">互動專題</button>
+<button data-view="slides" role="tab">簡報</button>
+<button data-view="video" role="tab">敘事短片</button>
+</div>
+<div class="stage">
+<canvas id="paper-effect" aria-hidden="true">
+</canvas>
+<div id="viewer">
+</div>
+<button id="geometry-refresh" class="quiet">更新實體預覽</button>
+<div id="preview" hidden>
+</div>
+<div class="stage-meta">
+<span id="stage-label">PARAMETRIC / mm</span>
+<button id="explode" class="quiet">零件分解 ↗</button>
+</div>
+</div>
+<div class="caption">
+<span class="caption-index">NARRATION</span>
+<p id="caption-text">
+</p>
+</div>
+<div class="canvas-footer">
+<span id="draft-status">尺寸母本</span>
+<button id="scene-play" class="quiet">▶ 預覽運鏡</button>
+<button id="audit" class="quiet">視覺巡檢</button>
+<label class="fx-toggle">
+<input type="checkbox" id="fx"> 光影</label>
+<span id="fx-status" class="hint" role="status">
+</span>
+</div>
+<div id="audit-result" class="audit-findings" aria-live="polite">
+</div>
+</section>
+<aside class="results">
+<div class="section-label">03 / 作品輸出</div>
+<details id="output-settings">
+<summary>選擇輸出格式</summary>
+<label>
+<input type="checkbox" data-target="web"> 互動網頁</label>
+<label>
+<input type="checkbox" data-target="diagram"> SVG 圖解與流程</label>
+<label>
+<input type="checkbox" data-target="cad"> CAD 零件 → STEP／STL／GLB</label>
+<label>
+<input type="checkbox" data-target="slides"> 可編輯簡報</label>
+<label>
+<input type="checkbox" data-target="video"> 敘事短片</label>
+</details>
+<details id="timeline-settings"><summary>可編輯時間軸</summary><button id="export-timeline" class="quiet">下載時間軸 JSON</button><label class="upload">匯入時間軸 JSON<input id="import-timeline" type="file" accept=".json,application/json"></label><p class="hint">匯入先成為本機草稿；按「儲存」才更新作品版本。先儲存現有修改再交換時間軸。JSON 上限 16 MiB。</p></details><details id="diagram-settings"><summary>進階架構與流程圖</summary><label>圖表類型<select id="diagram-kind"><option value="">自動章節流程</option><option value="architecture">架構圖</option><option value="workflow">工作流程</option><option value="sequence">時序圖</option><option value="dataflow">資料流</option><option value="lifecycle">生命週期</option><option value="erd">資料關聯</option><option value="tree">樹狀圖</option><option value="class">類別圖</option><option value="timeline">時間線</option><option value="waterfall">瀑布圖</option><option value="explainer">技術解說</option></select></label><label>Archify 圖表 JSON<textarea id="diagram-document" rows="8" aria-label="Archify 圖表 JSON"></textarea></label><p class="hint">使用所選圖表類型的原生 JSON 結構；自動章節流程不需填寫。</p></details><details id="video-settings"><summary>影片品質與混音</summary><label>解析度<select id="video-resolution"><option value="source">保留來源解析度</option><option value="720p">720p</option><option value="1080p">1080p</option><option value="2160p">2160p · 4K</option></select></label><label>畫格率<select id="video-fps"><option value="source">保留來源畫格率</option><option>24</option><option>25</option><option>30</option><option>50</option><option>60</option></select></label><label>CRF（越低品質越高）<input id="video-crf" type="number" min="0" max="28"></label><label class="check"><input id="video-captions" type="checkbox"> 燒錄字幕</label><label class="check"><input id="video-normalize" type="checkbox"> 雙階段響度校正</label></details><details id="slides-settings"><summary>簡報版型與播放</summary><label>預設版型<select id="slides-layout"><option value="editorial">文字與圖解</option><option value="full">全幅視覺</option><option value="split">左右對照</option></select></label><label class="check"><input id="slides-narration" type="checkbox"> 嵌入章節旁白</label><label class="check"><input id="slides-autoplay" type="checkbox"> 媒體自動播放</label><label>換頁效果<select id="slides-transition"><option value="fade">淡入</option><option value="none">直接切換</option></select></label><label>物件進場<select id="slides-animation"><option value="none">立即顯示</option><option value="fade">淡入</option></select></label></details><details id="effect-settings"><summary>網頁光影</summary><label>效果<select id="effect-type"><option value="Circle">柔光圓形</option><option value="LinearGradient">線性漸層</option></select></label><div class="two-fields"><label>主色<input id="effect-color" type="color"></label><label>次色<input id="effect-secondary" type="color"></label></div><label>半徑<input id="effect-radius" type="number" min="0.01" max="2" step="0.01"></label><label>柔化<input id="effect-softness" type="number" min="0" max="1" step="0.01"></label><label>角度<input id="effect-angle" type="number" min="-360" max="360"></label><label>不透明度<input id="effect-opacity" type="number" min="0" max="1" step="0.05"></label></details><p class="hint" id="source-scope"></p><p class="hint" id="job-state">
+</p>
+<div id="artifact-list">
+</div>
+<div class="job-actions">
+<button id="cancel" class="quiet" hidden>取消製作</button>
+<button id="retry" class="quiet" hidden>重試此版本</button>
+</div>
+<div class="section-label">04 / 品質檢查</div>
+<div id="quality">
+</div>
+<p id="reuse-state" class="hint">
+</p>
+<button id="compare" class="quiet">比較前後版本差異</button>
+<div id="comparison" class="comparison" hidden>
+</div>
+<p class="hint" id="scope">
+</p>
+<details>
+<summary>原始引擎與狀態</summary>
+<div id="capabilities">
+</div>
+</details>
+</aside>
+</main>
+<footer>
+<span>一份母本，五種作品。</span>
+<span id="footnote">
+</span>
+</footer>
+<dialog id="create-dialog">
+<form method="dialog" id="create-form">
+<p class="eyebrow">NEW PROJECT</p>
+<h2>建立新作品</h2>
+<label>選擇創作模板<select id="recipe">
+</select>
+</label>
+<p class="hint" id="recipe-description">
+</p>
+<label>作品名稱<input id="create-title" maxlength="48" required>
+</label>
+<label>作品代號<input id="create-id" pattern="[a-z][a-z0-9_-]{0,47}" maxlength="48" required>
+</label>
+<div class="toolbar">
+<button type="button" id="close-create" class="quiet">取消</button>
+<button type="submit" class="primary">建立並載入模板</button>
+</div>
+</form>
+</dialog>
+<script src="/static/app.js">
+</script>
+</body>
+</html>

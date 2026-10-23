@@ -26,12 +26,20 @@ class RunRequest(BaseModel):
 from .operations import Operation,patch_project
 class PatchRequest(BaseModel):
     expected_revision:int
-    operations:list[Operation]=Field(min_length=1,max_length=64)
+    operations:list[Operation]=Field(min_length=1,max_length=2048)
     dry_run:bool=False
 class CreateRequest(BaseModel):
     recipe_id:str
     project_id:str
     title:str|None=None
+
+class PreviewRequest(BaseModel):
+    manifest:Manifest
+
+class TimelineRequest(BaseModel):
+    expected_revision:int
+    timeline:dict
+    dry_run:bool=False
 
 def create_app():
     from .provenance import runtime_sources
@@ -71,11 +79,11 @@ def create_app():
             return JSONResponse({'error':'same-origin required'},403)
         if request.method not in ('GET','HEAD','OPTIONS') and not secrets.compare_digest(request.headers.get('x-studio-token',''),token):
             return JSONResponse({'error':'studio token required'},403)
-        limit=51*1024*1024 if request.url.path=='/api/media' else 25*1024*1024 if request.url.path=='/api/audio' else 512*1024
+        limit=512*1024*1024 if request.url.path in ('/api/media','/api/audio') else 50*1024*1024 if request.url.path in ('/api/cad','/api/scene') else 2*1024*1024 if request.url.path=='/api/svg' else 16*1024*1024
         try:
             if int(request.headers.get('content-length','0'))>limit:return JSONResponse({'error':'request too large'},413)
         except ValueError:return JSONResponse({'error':'invalid content length'},400)
-        if request.method not in ('GET','HEAD','OPTIONS') and request.url.path not in ('/api/audio','/api/media'):
+        if request.method not in ('GET','HEAD','OPTIONS') and request.url.path not in ('/api/audio','/api/media','/api/cad','/api/scene','/api/svg'):
             chunks=[]; total=0
             async for chunk in request.stream():
                 total+=len(chunk)
@@ -120,11 +128,57 @@ def create_app():
     def patch(project_id:str,body:PatchRequest):return patch_project(store,project_id,body.expected_revision,body.operations,dry_run=body.dry_run)
     @app.get('/api/projects/{project_id}/compare')
     def compare(project_id:str,before:int,after:int|None=None):return store.compare(project_id,before,after)
+    @app.get('/api/projects/{project_id}/timeline')
+    def timeline_export(project_id:str):
+        from .timeline import export_timeline
+        return export_timeline(store,project_id)
+    @app.put('/api/projects/{project_id}/timeline')
+    def timeline_import(project_id:str,body:TimelineRequest):
+        from .timeline import import_timeline
+        return import_timeline(store,project_id,body.expected_revision,body.timeline,body.dry_run)
+    @app.post('/api/geometry/preview')
+    def geometry_preview(body:PreviewRequest):
+        from .geometry_preview import preview_geometry
+        return preview_geometry(store,body.manifest)
+    @app.get('/api/previews/{key}/{name}')
+    def preview_file(key:str,name:str):
+        import re
+        if not re.fullmatch(r'[a-f0-9]{64}',key) or name not in ('model.glb','geometry.json'):raise HTTPException(404)
+        from .geometry_preview import preview_file_path
+        try:path=preview_file_path(store,key,name)
+        except ValueError as error:raise HTTPException(409,str(error)) from error
+        if not path.is_file():raise HTTPException(404)
+        return FileResponse(path)
+    @app.post('/api/cad')
+    async def cad_import(request:Request):
+        from .cad_assets import import_cad,CAD_LIMIT
+        data=bytearray()
+        async for chunk in request.stream():
+            data.extend(chunk)
+            if len(data)>CAD_LIMIT:raise HTTPException(413)
+        return await asyncio.to_thread(import_cad,store,bytes(data),request.query_params.get('name'))
+    @app.post('/api/scene')
+    async def scene_import(request:Request):
+        from .scene_assets import import_scene,SCENE_LIMIT
+        data=bytearray()
+        async for chunk in request.stream():
+            data.extend(chunk)
+            if len(data)>SCENE_LIMIT:raise HTTPException(413)
+        return await asyncio.to_thread(import_scene,store,bytes(data),request.query_params.get('name'))
+    @app.post('/api/svg')
+    async def svg_import(request:Request):
+        from .svg_assets import import_svg,SVG_LIMIT
+        data=bytearray()
+        async for chunk in request.stream():
+            data.extend(chunk)
+            if len(data)>SVG_LIMIT:raise HTTPException(413)
+        return import_svg(store,bytes(data),request.query_params.get('name'))
     @app.get('/api/projects/{project_id}/preflight')
     def preflight(project_id:str):
         from .media_assets import preflight
         m=Manifest.model_validate(store.project(project_id)['manifest'])
-        return preflight(store,m,m.output_targets)
+        from .preflight import contrast_checks
+        return {**preflight(store,m,m.output_targets),'contrast':contrast_checks(m)}
     @app.post('/api/media')
     async def media(request:Request):
         from .media_assets import import_media,LIMIT
@@ -138,10 +192,8 @@ def create_app():
         return [json.loads(p.read_text()) for p in sorted((store.root/'assets').glob('*.json'))]
     @app.get('/api/assets/{name}')
     def asset(name:str):
-        from .media_assets import asset_info
-        from .schema import Visual
-        Visual(mode='clip' if name.endswith('.mp4') else 'image',asset=name)
-        path,_=asset_info(store,name)
+        from .agent_assets import asset_path
+        path=asset_path(store,name)
         return FileResponse(path)
     @app.get('/api/projects')
     def projects():return store.projects()
@@ -173,12 +225,12 @@ def create_app():
     def retry(job_id:str):return store.retry(job_id)
     @app.post('/api/audio')
     async def audio(request:Request):
-        from .assets import import_audio
+        from .assets import import_audio,AUDIO_LIMIT
         data=bytearray()
         async for chunk in request.stream():
             data.extend(chunk)
-            if len(data)>24*1024*1024:raise HTTPException(413)
-        return import_audio(store,bytes(data))
+            if len(data)>AUDIO_LIMIT:raise HTTPException(413)
+        return await asyncio.to_thread(import_audio,store,bytes(data),request.query_params.get('name'))
     @app.get('/api/styles')
     def styles():return json.loads((ROOT/'vendor/freestylefly--awesome-gpt-image-2/styles.json').read_text())
     @app.get('/artifacts/{job_id}/{name:path}')

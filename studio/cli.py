@@ -27,13 +27,16 @@ def main():
     run=sub.add_parser('render');run.add_argument('id');run.add_argument('--targets',nargs='+',default=None,choices=TARGETS);run.add_argument('--wait',action='store_true');run.add_argument('--force',action='store_true');run.add_argument('--timeout',type=float,default=900)
     for command in ('status','cancel','retry'):
         c=sub.add_parser(command);c.add_argument('id')
-    for command in ('audio','media'):
+    for command in ('audio','media','cad','scene','svg'):
         a=sub.add_parser(command);a.add_argument('file',type=Path)
     sub.add_parser('schema');sub.add_parser('recipes')
     c=sub.add_parser('create');c.add_argument('recipe');c.add_argument('id');c.add_argument('--title')
     c=sub.add_parser('patch');c.add_argument('id');c.add_argument('file',type=Path);c.add_argument('--revision',type=int,required=True);c.add_argument('--dry-run',action='store_true')
     c=sub.add_parser('compare');c.add_argument('id');c.add_argument('before',type=int);c.add_argument('--after',type=int)
     c=sub.add_parser('preflight');c.add_argument('id')
+    c=sub.add_parser('timeline');c.add_argument('id')
+    c=sub.add_parser('timeline-import');c.add_argument('id');c.add_argument('file',type=Path);c.add_argument('--revision',type=int,required=True);c.add_argument('--dry-run',action='store_true')
+    sub.add_parser('assets')
     serve=sub.add_parser('serve');serve.add_argument('--port',type=int,default=8765);serve.add_argument('--socket',type=Path)
     args=p.parse_args()
     try:
@@ -48,8 +51,8 @@ def main():
             result=store.project(args.id)
             if args.manifest:result=result['manifest']
         elif args.command=='save':
-            raw=sys.stdin.read(512*1024+1) if str(args.file)=='-' else args.file.read_text(encoding='utf-8')
-            if len(raw.encode())>512*1024:raise ValueError('Manifest exceeds 512 KiB')
+            raw=sys.stdin.read(16*1024*1024+1) if str(args.file)=='-' else args.file.read_text(encoding='utf-8')
+            if len(raw.encode())>16*1024*1024:raise ValueError('Manifest exceeds 16 MiB')
             doc=Manifest.model_validate_json(raw);doc.resolved();result=store.save(doc,args.revision)
         elif args.command=='render':
             result=store.enqueue(args.id,args.targets,force=args.force)
@@ -79,20 +82,41 @@ def main():
             result=create_project(store,args.recipe,args.id,args.title)
         elif args.command=='patch':
             from .operations import Operation,patch_project
-            raw=sys.stdin.read(512*1024+1) if str(args.file)=='-' else args.file.read_text()
-            if len(raw.encode())>512*1024:raise ValueError('Patch exceeds 512 KiB')
+            raw=sys.stdin.read(16*1024*1024+1) if str(args.file)=='-' else args.file.read_text()
+            if len(raw.encode())>16*1024*1024:raise ValueError('Patch exceeds 16 MiB')
             result=patch_project(store,args.id,args.revision,[Operation.model_validate(o) for o in json.loads(raw)],dry_run=args.dry_run)
         elif args.command=='compare':result=store.compare(args.id,args.before,args.after)
         elif args.command=='preflight':
             from .media_assets import preflight
             m=Manifest.model_validate(store.project(args.id)['manifest']);result=preflight(store,m,m.output_targets)
+            from .preflight import contrast_checks
+            result['contrast']=contrast_checks(m)
+        elif args.command=='assets':result=[json.loads(p.read_text()) for p in sorted((store.root/'assets').glob('*.json'))]
+        elif args.command=='timeline':
+            from .timeline import export_timeline
+            result=export_timeline(store,args.id)
+        elif args.command=='timeline-import':
+            from .timeline import import_timeline
+            raw=sys.stdin.read(16*1024*1024+1) if str(args.file)=='-' else args.file.read_text()
+            if len(raw.encode())>16*1024*1024:raise ValueError('Timeline exceeds 16 MiB')
+            parsed=json.loads(raw);result=import_timeline(store,args.id,args.revision,parsed.get('timeline',parsed),args.dry_run)
+        elif args.command in ('cad','scene','svg'):
+            if args.command=='cad':
+                from .cad_assets import import_cad as importer,CAD_LIMIT as limit
+            elif args.command=='scene':
+                from .scene_assets import import_scene as importer,SCENE_LIMIT as limit
+            else:
+                from .svg_assets import import_svg as importer,SVG_LIMIT as limit
+            with (args.file.open('rb') if str(args.file)!='-' else __import__('contextlib').nullcontext(sys.stdin.buffer)) as stream:
+                result=importer(store,stream.read(limit+1),args.file.name)
         elif args.command=='media':
             from .media_assets import import_media,LIMIT
             with (args.file.open('rb') if str(args.file)!='-' else __import__('contextlib').nullcontext(sys.stdin.buffer)) as stream:
                 result=import_media(store,stream.read(LIMIT+1),args.file.name)
         elif args.command=='audio':
-            from .assets import import_audio
-            result=import_audio(store,sys.stdin.buffer.read(24*1024*1024+1) if str(args.file)=='-' else args.file.read_bytes())
+            from .assets import import_audio,AUDIO_LIMIT
+            with (args.file.open('rb') if str(args.file)!='-' else __import__('contextlib').nullcontext(sys.stdin.buffer)) as stream:
+                result=import_audio(store,stream.read(AUDIO_LIMIT+1),args.file.name)
         elif args.command=='mcp':
             from .mcp_server import server
             server.run(transport='stdio');return 0

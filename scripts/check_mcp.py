@@ -19,7 +19,7 @@ async def main() -> None:
             async with ClientSession(read, write) as session:
                 await session.initialize()
                 names = [tool.name for tool in (await session.list_tools()).tools]
-                assert len(names) == 14, names
+                assert len(names) == 19, names
                 calls = [
                     ('studio_schema', {}),
                     ('studio_recipes', {}),
@@ -27,6 +27,8 @@ async def main() -> None:
                     ('studio_preflight', {'project_id':'mcp-assembly'}),
                     ('studio_patch', {'project_id':'mcp-assembly','expected_revision':1,'operations':[{'op':'set','target':'solid','id':'tray','values':{'bore':16}}]}),
                     ('studio_compare', {'project_id':'mcp-assembly','before':1}),
+                    ('studio_assets', {}),
+                    ('studio_timeline', {'project_id':'mcp-assembly'}),
                 ]
                 for name, arguments in calls:
                     result = await session.call_tool(name, arguments)

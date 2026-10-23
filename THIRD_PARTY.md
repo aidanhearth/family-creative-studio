@@ -1,26 +1,31 @@
-# 第三方來源與實際整合範圍
+# Third-party sources and actual integration — 0.3.0
 
-原始來源固定在本表 commit。選入檔案的原始及修改後 SHA-256 見 `vendor/sources.lock.json`，授權／NOTICE 保留於各 vendor 子目錄。PyPI/npm 發行套件另以版本鎖定；不把來源 commit 當成發行 wheel 的雜湊。
+The links below identify immutable source commits. `vendor/sources.lock.json` records original and vendored file SHA-256 values; the selected upstream license/NOTICE files remain alongside the code. Python/npm releases are separately version-locked; a Git source commit is not a substitute for a package artifact hash.
 
-| 來源 | 固定 commit | 授權 | 本版實際使用 |
+Twelve projects were researched, with selected code or data from eleven used in the application. VoiceStudio is research-only. The MIT license on this project's original code does not relicense upstream material.
+
+| Source at pinned revision | Commit | Upstream license | Actual use |
 |---|---|---|---|
-| [cathrynlavery/diagram-design](https://github.com/cathrynlavery/diagram-design) | `7a12007b5a42` | MIT | 直接使用對比度計算與色彩檢查模組。 |
-| [freestylefly/awesome-gpt-image-2](https://github.com/freestylefly/awesome-gpt-image-2) | `63e6176fa01b` | MIT | 直接使用風格／範本資料，輸出含母本尺寸的 image-brief.json 與 image-prompt.txt；未呼叫生圖服務。 |
-| [tt-a1i/archify](https://github.com/tt-a1i/archify) | `25cf37080fc8` | MIT | 呼叫固定來源 CLI 產生 workflow.html。 |
-| [pbakaus/impeccable](https://github.com/pbakaus/impeccable) | `5cb95eea9c96` | Apache-2.0 | 執行原版瀏覽器腳本及內嵌 WASM 視覺檢查。 |
-| [wheresryan22/anatomy](https://github.com/wheresryan22/anatomy) | `1482e8469b0a` | MIT | 直接使用等距投影、擠出與輪廓工具產生 SVG。 |
-| [hugohe3/ppt-master](https://github.com/hugohe3/ppt-master) | `523e5bd972f9` | MIT | 獨立程序呼叫原生 DrawingML 建構器（flat 模式），重開檢查群組內圖元。 |
-| [img2threejs/img2threejs](https://github.com/img2threejs/img2threejs) | `954cd5845e90` | Apache-2.0 | 直接使用 GLB 二進位容器檢查器。有限分數助手只有單元測試，未接入產品評分流程；未提供圖片自動建模。 |
-| [debpalash/VoiceStudio](https://github.com/debpalash/VoiceStudio) | `38740bf77628` | AGPL-3.0-only（原倉庫） | 僅作研究來源；公開版不收錄其程式或模型。現行配音為 eSpeak NG／自備 WAV／原音／靜音。 |
-| [earthtojake/text-to-cad](https://github.com/earthtojake/text-to-cad) | `2f793659fb7b` | MIT | 安裝 cadgen==0.7.26，實際執行 OpenCASCADE 原生幾何及 GLB/STL 匯出。 |
-| [browser-use/video-use](https://github.com/browser-use/video-use) | `43cfc5668335` | MIT | 直接使用 concat_segments，保留單引號路徑修補；FFmpeg 實際製作、串接與封裝。 |
-| [shader-effects-inc/shaders](https://github.com/shader-effects-inc/shaders) | `eb3df5cedc82` | MIT | 安裝 shaders==4.0.5，使用實際 WebGPU 探測與效果入口；軟體瀏覽器的退路另行驗證。 |
-| [storytold/artcraft](https://github.com/storytold/artcraft) | `800217ed04d1` | MIT OR Apache-2.0 | 在編輯器使用修補後的 HistoryManager；未移植完整 ArtCraft 桌面與商業後端。 |
+| [cathrynlavery/diagram-design](https://github.com/cathrynlavery/diagram-design/tree/7a12007b5a4246894f342a2e52e78facbc62eca3) | `7a12007b5a42` | MIT | Vendored color parsing and contrast calculation; invoked by preflight and final checks for ink/muted/accent text against paper. |
+| [freestylefly/awesome-gpt-image-2](https://github.com/freestylefly/awesome-gpt-image-2/tree/63e6176fa01be51c000108dacd72716d3e46784b) | `63e6176fa01b` | MIT | Vendored style/template data for image-brief.json and image-prompt.txt. No image model is called. |
+| [tt-a1i/archify](https://github.com/tt-a1i/archify/tree/25cf37080fc8b1dbe758a4efc3935b55f3327083) | `25cf37080fc8` | MIT | Pinned CLI renders custom documents in eleven exposed kinds, or a chapter-derived workflow. The adapter writes workflow.json/workflow.html. |
+| [pbakaus/impeccable](https://github.com/pbakaus/impeccable/tree/5cb95eea9c96479f57afe0732a45470d30183326) | `5cb95eea9c96` | Apache-2.0 | Original browser checker script and embedded WASM. The full design skill/command suite is not ported. |
+| [wheresryan22/anatomy](https://github.com/wheresryan22/anatomy/tree/1482e8469b0a9e0d8cc18ea2740a01423d29ae80) | `1482e8469b0a` | MIT | Vendored isometric helpers, with local projection code consuming real post-operation CAD tessellation for SVG. |
+| [hugohe3/ppt-master](https://github.com/hugohe3/ppt-master/tree/523e5bd972f94c3cac8742fec0d54d43824a17bb) | `523e5bd972f9` | MIT | Pinned native SVG-to-DrawingML builder in structured mode, with masters/layouts, notes, narration, transitions and optional shape animation. Local adapters add embedded movie playback and authored timings. |
+| [img2threejs/img2threejs](https://github.com/img2threejs/img2threejs/tree/954cd5845e90efd045694bab725d68a9863c20e0) | `954cd5845e90` | Apache-2.0 | Vendored GLB binary parser used in scene import and CAD export verification. Local structural validation and rendering are additional integration code; no image-to-model generation. |
+| [debpalash/VoiceStudio](https://github.com/debpalash/VoiceStudio/tree/38740bf77628603395addf2348b22d194e99edd7) | `38740bf77628` | AGPL-3.0-only (research repository only) | Research-only optional checkout; no code or models are included or executed by this release. Current audio uses eSpeak NG, user WAV and clip audio with local FFmpeg processing. |
+| [earthtojake/text-to-cad](https://github.com/earthtojake/text-to-cad/tree/2f793659fb7bab537e2f00836e06448fc4087cb2) | `2f793659fb7b` | MIT | cadgen==0.7.26 supplies the build123d/OpenCASCADE dependency interface. Local geometry code calls build123d directly for construction, STEP import and STEP/STL/GLB export; no CAD prompt broker or generated-code execution is used. |
+| [browser-use/video-use](https://github.com/browser-use/video-use/tree/43cfc566833548093455c9d4a46bd69913b7e552) | `43cfc5668335` | MIT | Vendored concat_segments helper, with FFconcat path-escaping changes. Local code supplies original-media storage, trims, timeline interchange, mixing, captions and output composition. |
+| [shader-effects-inc/shaders](https://github.com/shader-effects-inc/shaders/tree/eb3df5cedc826008be8e1037c1182e649037c74a) | `eb3df5cedc82` | MIT | shaders==4.0.5 supplies actual WebGPU support detection and Circle/LinearGradient effects; local parameters and fallback are shared by editor and published viewer. |
+| [storytold/artcraft](https://github.com/storytold/artcraft/tree/800217ed04d10fc12706c28e6e91ae2a6b286092) | `800217ed04d1` | MIT OR Apache-2.0 | Vendored HistoryManager with failure recovery and generation-aware clear/queued-operation handling. The full ArtCraft editor and generation backend are not included. |
 
-## 窄範圍修補
+## Local modifications and adapters
 
-- ArtCraft HistoryManager：每次失敗保留堆疊元素，將排程尾端復原，讓後續復原／重做可繼續。
-- video-use：以 FFconcat 格式正確跳脫單引號；拒絕換行檔名。路徑跳脫行為由專案測試涵蓋。
-- 分數驗證：保留拒絕 NaN／Infinity／布林與超出範圍值的助手及單元測試，但產品沒有使用它評分，不能列為已上線的品質閘門。幾何欄位另由 Manifest 的有限值限制驗證。
+- **ArtCraft HistoryManager:** failed undo/redo retains the relevant stack item, and the serialization chain recovers for later actions. A generation counter now invalidates queued operations after `clear()` and prevents an operation that crossed a clear from repopulating history. These changes address local history correctness, not remote collaboration.
+- **video-use:** FFconcat paths escape single quotes correctly and reject newline filenames. Timeline composition, preserved media, gains and loudness handling are local workbench code around this helper.
+- **CAD:** local `geometry_kernel.py` and `cad_worker.py` call build123d directly through the installed cadgen package. They support bounded primitives, STEP, ordered booleans, edge treatment, construction helpers and checked exports. They do not execute agent-authored Python or use the upstream prompt-to-CAD broker. `geometry_preview.py` verifies source/output hashes before serving an exact draft preview.
+- **PPT Master:** the adapter now requests `pptx_structure='structured'`, assigns master/layout metadata and preserves supported native vectors/text. Local handling removes a promoted background before animation targeting, embeds MP4 media, and sets playback/timing behavior. This does not promise universal SVG or presentation-player compatibility.
+- **Anatomy and GLB:** local code projects actual CAD tessellation and validates imported GLB structure/resources. Original imported GLB materials and animations remain separate from the parametric CAD assembly. No GLB-to-STEP conversion or image-to-model pipeline is claimed.
+- **Source and package updates:** changes to vendored code must update the matching lock entry and retain attribution. Downloaded research checkouts remain pinned and are not copied wholesale into the application's source distribution.
 
-本文記錄實際整合，不代表十二套 App 的全部功能已合併。
+Manifest numeric bounds reject invalid/non-finite geometry values. The project's verified format/geometry checks do not score artistic quality. See [COMPARISON.md](docs/COMPARISON.md) for remaining gaps and [VERIFICATION.md](docs/VERIFICATION.md) for test scope.

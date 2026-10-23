@@ -29,11 +29,11 @@ def doctor():
     except ValueError as error: checks['sources_pinned']=False;source_error=str(error)
     from .worker import worker_alive
     usage=shutil.disk_usage(data_root())
-    return {'version':'0.2.0','ready':all(checks.values()),'checks':checks,'free_gib':round(usage.free/2**30,2),
+    return {'version':'0.3.0','ready':all(checks.values()),'checks':checks,'free_gib':round(usage.free/2**30,2),
         'sources_status':source_error or 'pinned and clean','worker_alive':worker_alive(data_root()),
         'network':'Render subprocesses use Linux network/PID namespaces; updates and telemetry disabled. No paid model calls.',
-        'audio':'Per chapter: eSpeak NG draft / imported WAV, original clip audio, or silence; no ASR or mixing. VoiceStudio model weights are not installed.',
-        'video':'Verified CAD GLB orbit/explode scenes plus normalized PNG/JPEG/MP4, source trims, 24 fps / 720p.',
-        'editing':'Three recipes; stable-ID atomic patches; revision comparison; verified CAD/audio/scene reuse.',
-        'geometry':'Bounded box/cylinder assemblies with through-holes; arbitrary image-to-3D generation is not implemented.',
+        'audio':'Per chapter: imported WAV / eSpeak draft, original audio, mixing or silence; gains, cut fades and two-pass whole-film loudness. VoiceStudio models and ASR are separate engines.',
+        'video':'Original PNG/JPEG/MP4/MOV bytes retained; source or 720p/1080p/2160p canvas, source or 24/25/30/50/60 fps; SDR composition with explicit HDR tone mapping.',
+        'editing':'Three recipes, local drafts and undo; 2048-operation atomic revisions; exact CAD previews, asset import, editable timelines and verified stage reuse.',
+        'geometry':'Box/cylinder/sphere/cone/torus/polygon extrusion, STEP import, XYZ rotation, booleans, fillet/chamfer. Independent original GLB scene import preserves materials and animations; no image-to-3D generator.',
         'artistic_quality':'Not scored automatically; no claim of superiority to every upstream tool.'}

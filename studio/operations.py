@@ -12,7 +12,7 @@ class Operation(Strict):
     target: Literal['project','brand','solid','beat']
     id: Id | None = None
     values: dict = Field(default_factory=dict)
-    index: int | None = Field(default=None,ge=0,le=15)
+    index: int | None = Field(default=None,ge=0,le=255)
 
 def changes_between(before,after,path=''):
     if isinstance(before,dict) and isinstance(after,dict):
@@ -25,14 +25,14 @@ def changes_between(before,after,path=''):
     return [] if before==after else [{'path':path,'before':before,'after':after}]
 
 def apply_operations(manifest:Manifest,operations:list[dict|Operation]):
-    if not 1<=len(operations)<=64:raise ValueError('Use 1–64 operations per atomic edit')
+    if not 1<=len(operations)<=2048:raise ValueError('Use 1–2048 operations per atomic edit')
     data=copy.deepcopy(manifest.model_dump())
     for raw in operations:
         op=raw if isinstance(raw,Operation) else Operation.model_validate(raw)
         if op.target in ('project','brand'):
             if op.op!='set' or op.id is not None:raise ValueError('Project/brand edits use set without an object ID')
             target=data if op.target=='project' else data['brand']
-            allowed={'title','subtitle','narration_asset','style_id','output_targets'} if op.target=='project' else {'name','paper','ink','accent','muted'}
+            allowed={'title','subtitle','narration_asset','style_id','output_targets','video','slides','effect','diagram','scene_asset','scene_animation'} if op.target=='project' else {'name','paper','ink','accent','muted'}
             if not op.values or set(op.values)-allowed:raise ValueError('Unsupported project/brand field')
             target.update(op.values);continue
         key={'solid':'solids','beat':'beats'}[op.target];items=data[key]

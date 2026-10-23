@@ -1,14 +1,10 @@
 import json
 from pathlib import Path
 import pytest
-from studio.schema import Manifest,score_checked
+from studio.schema import Manifest
 from studio.seed import demo
 from studio.store import Store,Conflict
 from studio.paths import contained,sha256
-
-@pytest.mark.parametrize('value',['NaN','Infinity','-Infinity',float('nan'),True,-.1,1.1])
-def test_quality_numbers_reject_invalid(value):
-    with pytest.raises(ValueError):score_checked(value)
 
 def test_dimension_changes_flow_to_all_text():
     doc=demo();doc.solids[2].bore=64

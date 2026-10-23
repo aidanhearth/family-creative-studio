@@ -1,59 +1,57 @@
-# 與 12 個原專案比較：目前哪裡較弱
+# Comparison with the twelve upstream projects — 0.3.0
 
-比較日期：2026-10-23。比較對象是 `vendor/sources.lock.json` 的固定 commit；官方 README 的產品描述另於當日查閱。上游宣稱的能力不等於本專案已親自驗收其全部功能。這是功能覆蓋與程式路徑審核，不是十二套工具的相同題目效能／藝術品質盲測。
+This is an implementation and capability review against the pinned upstream commits in `vendor/sources.lock.json`. The change baseline is this project's `5fa508fb` revision. Upstream links below remain fixed rather than silently comparing against moving default branches. It is not a controlled twelve-application performance or artistic-quality benchmark; an upstream README claim is not a claim that every upstream feature was independently exercised.
 
-**結論：本版沒有證據比任一原專案全面更強，更不能宣稱超越所有原專案或頂尖藝術家。** 本版提供同一份規格產生多種成果、尺寸連動、修訂與代理入口；多數原專案的專門能力只取用一小部分。以下把「已確認縮限」、「未移植」及「未測量」分開說明。
+**0.3.0 removes several concrete restrictions from 0.2.0, but there is no evidence that it is better than every upstream tool, replaces all twelve applications, or exceeds expert artists.** The integration advantage is shared authored data, revision-aware edits and coordinated outputs. Specialist workflows still have gaps.
 
-## ⑤ 圖解、前端設計與簡報
+## Per-project changes and remaining weaknesses
 
-| 原專案／固定版本 | 本版接入什麼 | 已確認較弱或未接入 | 使用上會遇到什麼 |
-|---|---|---|---|
-| [diagram-design](https://github.com/cathrynlavery/diagram-design/tree/7a12007b5a4246894f342a2e52e78facbc62eca3) | 對比度檢查函式 | 未移植完整圖種、設計技能、自由排版與品牌流程；本版使用固定章節版型 | 不能把符合對比度當成有原專案的圖解設計能力；複雜關係圖仍需另外設計。 |
-| [awesome-gpt-image-2](https://github.com/freestylefly/awesome-gpt-image-2/tree/63e6176fa01be51c000108dacd72716d3e46784b) | 風格資料、提示詞與 brief 匯出 | 未整合完整案例瀏覽、比較與生圖工作流；沒有呼叫圖片生成模型 | 得到的是提示詞／規格，不會直接得到新圖片；無法比較生成圖片品質。原倉庫本身也不等於一個圖片生成模型。 |
-| [Archify](https://github.com/tt-a1i/archify/tree/25cf37080fc8b1dbe758a4efc3935b55f3327083) | CLI 渲染固定的創作工作流程圖 | 沒有分析任意程式庫、建立原始碼映射、開放其他圖種及任意圖結構編輯 | `workflow.html` 是本工作台流程圖，不是使用者程式碼的架構分析。 |
-| [Impeccable](https://github.com/pbakaus/impeccable/tree/5cb95eea9c96479f57afe0732a45470d30183326) | 原版瀏覽器檢查 JS／WASM | 未接入整套設計指令、分析後修正／重設計流程；偵測不會自行改善介面 | 有檢查器不代表有完整設計代理；版型、字體及視覺方向仍受本版固定樣式限制。 |
-| [Anatomy](https://github.com/wheresryan22/anatomy/tree/1482e8469b0a9e0d8cc18ea2740a01423d29ae80) | 等距投影與擠出 SVG 工具 | 未移植原技能的機構建模及敘事流程；僅有基礎零件、固定 orbit／explode | 能旋轉或拆開幾塊零件，不等於模擬齒輪、流體或真實物理運動。 |
-| [PPT Master](https://github.com/hugohe3/ppt-master/tree/523e5bd972f94c3cac8742fec0d54d43824a17bb) | SVG → 原生 DrawingML、可編輯文字／圖元 | 未移植文件解析、完整模板、資料圖表、轉場／動畫與旁白工作流 | 3D、照片與影片場景以靜態海報放入投影片；不保留影片播放或 3D 動畫。可編輯圖元不等於每一種內容都可原生編輯。 |
-
-本區證據入口：[pipeline.py](../studio/pipeline.py)、[content.py](../studio/content.py)、[ppt_worker.py](../studio/ppt_worker.py)、[anatomy.mjs](../scripts/anatomy.mjs)、[app.js](../web/app.js)。
-
-## ⑥ 3D、影音與視覺特效
-
-| 原專案／固定版本 | 本版接入什麼 | 已確認較弱或未接入 | 使用上會遇到什麼 |
-|---|---|---|---|
-| [img2threejs](https://github.com/img2threejs/img2threejs/tree/954cd5845e90efd045694bab725d68a9863c20e0) | GLB 容器檢查；另保留未接入產品的分數助手 | 沒有圖片分析、程式化重建、外觀比對與反覆改模流程 | 上傳圖片只能成為章節圖片，不能變成可操作的 3D 模型；驗證 GLB 不能證明模型像原圖。 |
-| [VoiceStudio](https://github.com/debpalash/VoiceStudio/tree/38740bf77628603395addf2348b22d194e99edd7) | 僅作研究來源；公開版未收錄其程式 | 原先保留的分句助手在影片路徑沒有呼叫，公開版已移除；沒有安裝 VoiceStudio 的語音模型、克隆、轉錄、配音及有聲書工作台 | 目前是 eSpeak NG 中文草稿聲、自備 WAV、片段原音或靜音；不應視為自然人聲／專業配音。自然度未做盲聽測量。 |
-| [text-to-cad](https://github.com/earthtojake/text-to-cad/tree/2f793659fb7bab537e2f00836e06448fc4087cb2) | cadgen／OpenCASCADE、STEP/STL/GLB 匯出與幾何檢查 | 介面只開放方塊、圓柱、垂直貫穿孔與平移；沒有任意 CAD 程式、草圖約束、曲面、倒角、工程圖及裝配約束 | 尺寸與實體有效不等於可製造性；無法表達自由曲面、螺紋或複雜機件。 |
-| [video-use](https://github.com/browser-use/video-use/tree/43cfc566833548093455c9d4a46bd69913b7e552) | FFmpeg 片段串接助手；另寫章節、裁切、字幕流程 | 未接入逐字稿編輯、贅詞偵測、字幕逐字對齊、多軌／轉場／調色與完整代理剪輯流程 | 使用者必須手動提供章節、開始時間、旁白；音樂與原音無法自由混音。轉碼、縮圖及固定版面也會丟失原素材細節。 |
-| [Shaders](https://github.com/shader-effects-inc/shaders/tree/eb3df5cedc826008be8e1037c1182e649037c74a) | 單一效果入口、WebGPU 能力偵測與退路 | 沒有完整特效庫的編排與跨框架工作流；目前渲染機只驗證軟體／無 WebGPU 退路 | 有 WebGPU 的真實裝置上，特效品質與相容性仍未驗證；不能把 fallback 成功算成 WebGPU 已成功。 |
-| [ArtCraft](https://github.com/storytold/artcraft/tree/800217ed04d10fc12706c28e6e91ae2a6b286092) | 修補過的 HistoryManager（復原／重做） | 沒有完整圖層、角色、場景編輯、鏡頭及生成式創作環境 | 能 undo/redo 不等於擁有 ArtCraft 的創作引擎；目前編輯器主要是表單與受限預覽。 |
-
-本區證據入口：[schema.py](../studio/schema.py)、[cad_worker.py](../studio/cad_worker.py)、[scene_worker.py](../studio/scene_worker.py)、[video.py](../studio/video.py)、[media_assets.py](../studio/media_assets.py)、[viewer.js](../web/viewer.js)。
-
-## 輸出與操作的具體損失
-
-1. **影片細節與畫幅受限。** MP4 上傳最多 50 MiB、1–120 秒、4096×2160／60 fps，匯入後縮成最多 1280×720、24 fps、H.264/AAC；最終影片還會再編碼。3D／素材在章節版面中的畫面區域為 720×420。4K、60 fps、HDR、原始高碼率與完整畫幅都沒有保留；重複有損轉碼必然失去部分資訊，但本版尚未測量 PSNR/VMAF 或人工可見差異。
-2. **圖片處理有資訊損失。** PNG/JPEG 限單幀 20 MP，縮至 2560×2560 以內並轉 RGB；透明度與部分色彩／中繼資料無法保留。未做專業色彩管理或印刷驗收。
-3. **音訊不能自由混合。** 每章只選草稿旁白／全域 WAV、原音或靜音；沒有多軌、ducking、EQ、降噪、說話者分離及唇形同步。全域 WAV 與來源片段音訊不能混用，字幕依章節文字編排，沒有 ASR 逐字時間戳。
-4. **幾何表達很窄。** 最多 16 個零件、形狀尺寸 0–1000 mm（不含 0）、位置 ±2000 mm、圓柱 X/Y 直徑必須相同、通孔固定方向。沒有旋轉姿態、裝配碰撞／接觸分析或材質節點。STEP 重開、體積與網格檢查只證明特定幾何一致性。
-5. **內容與版型限制。** 最多 8 章，每章 3–30 秒，宣告時長合計最多 120 秒；章標題 28 字、內文 85 字、旁白 300 字。實際旁白可能使非片段章節延長，因此宣告 120 秒不等於所有情況下最終影片嚴格少於 120 秒。長文件、大型簡報及長片不適合此版。
-6. **預覽與成品不是同一種能力。** 編輯中的程序化幾何預覽，與輸出使用的實際 CAD GLB 不完全相同；投影片是靜態，網頁可互動，影片是固定鏡頭序列。不能宣稱跨格式保留全部互動與視覺效果。
-7. **操作成熟度不足。** 仍需理解範本、套用編輯、存檔、選輸出與渲染的差別；不是把任意指令丟進來就完成的通用設計代理。UI 有桌面／手機檢查，但沒有真實新手任務成功率、無障礙完整稽核或多人協作驗收。
-8. **速度與空間沒有優勢證據。** 軟體 3D 每一幀經瀏覽器截圖再編碼，可能較慢；只有單一 worker，沒有 GPU 工作排程、批次併行或可續算的半成品 checkpoint。雜湊快取可重用已完成階段，但依賴指紋變更會使快取失效，缺少自動容量／保留期限管理。
-9. **安裝與環境依賴仍重。** Python、Node、原生 CAD、FFmpeg、eSpeak、Chromium、字型、Linux namespaces 都要可用；不是輕量單一可執行檔。Mac／Windows 原生渲染未支援，跨機 bit-for-bit 決定性沒有證據。
-10. **本機服務不是多人服務。** loopback、來源檢查、session token 不能代替多使用者帳號權限。子程序隔離網路／PID，但根檔案系統仍以同一帳號可寫綁定，Chrome 子程序也使用 `--no-sandbox`。不應部署為接受陌生人上傳的公網服務；公開 GitHub 不代表公開執行服務。
-
-## 能確認的改善及其邊界
-
-同一 manifest 可以帶動尺寸、圖解、CAD、影片與簡報；原子 patch 有版本衝突保護，輸出檔案有雜湊驗證，已完成的 CAD／音訊／場景可重用。單引號檔名與失敗 undo 有針對性修補與測試；NaN 分數助手僅有單元測試，沒有產品評分呼叫，不能算已接入的改善。這些是特定整合與正確性改善，**不是藝術品質、全功能、效能或易用性全面勝出**。
-
-## 後續要怎樣才有資格說更強
-
-| 優先序 | 補強方向 | 必須交出的比較證據 |
+| Pinned upstream | What changed or is actually used | What remains weaker, absent or unmeasured |
 |---|---|---|
-| 1 | 語音與剪輯：可替換自然語音適配器、分段音訊／字幕對齊、無損來源保留 | 相同稿件盲聽、相同片段剪輯任務、畫質與耗時；分開標示所需模型／費用。 |
-| 2 | 3D／CAD：真正圖片建模與可擴充參數模型；專業建模入口 | 同一參考圖片多視角相似度、同一工程題幾何／尺寸／製造檢查；不能只靠檔案可開。 |
-| 3 | 簡報與圖解：多版型、圖表、文件解析、動畫 | 相同文件重建、文字／圖元可編輯性、排版錯誤數及人工盲評。 |
-| 4 | 操作與可靠性：簡化套用／儲存、快取配額、原生環境支援 | 新手完成率、步驟數、失敗恢復、資源峰值與跨平台安裝結果。 |
+| [diagram-design](https://github.com/cathrynlavery/diagram-design/tree/7a12007b5a4246894f342a2e52e78facbc62eca3) | Contrast functions now run on ink, muted and accent text during preflight and render, requiring 4.5:1 against paper; the interface exposes brand settings. | The full design skill, brand workflow, typography selection and free composition are not ported. A passing ratio neither designs a complex diagram nor establishes complete accessibility. |
+| [awesome-gpt-image-2](https://github.com/freestylefly/awesome-gpt-image-2/tree/63e6176fa01be51c000108dacd72716d3e46784b) | The catalog still supplies styles/templates for a dimension-aware image brief and prompt; original imported images can now remain intact. | No image model, complete example gallery, generated-image comparison or automatic refinement loop is supplied. This remains reference data and prompt preparation; the source repository is itself not an image model. |
+| [Archify](https://github.com/tt-a1i/archify/tree/25cf37080fc8b1dbe758a4efc3935b55f3327083) | Custom documents can use all eleven exposed kinds: architecture, workflow, sequence, dataflow, lifecycle, erd, tree, class, timeline, waterfall and explainer. The fixed chapter workflow remains a default. | The user/agent must author a valid graph document. No automatic repository analysis or code-location mapping is implemented. Kind availability is not proof every upstream schema feature has equivalent UI support; the output filename remains workflow.html. |
+| [Impeccable](https://github.com/pbakaus/impeccable/tree/5cb95eea9c96479f57afe0732a45470d30183326) | The original browser JS/WASM check remains available alongside editable brand/layout settings and deterministic contrast checks. | Its complete design commands, design reasoning and automatic redesign/remediation workflow are not integrated. The detector does not make visual decisions for the user, and no matched frontend-quality study establishes superiority. |
+| [Anatomy](https://github.com/wheresryan22/anatomy/tree/1482e8469b0a9e0d8cc18ea2740a01423d29ae80) | Isometric projection now consumes actual post-operation CAD tessellation rather than only simplified primitive outlines; diagrams, CAD preview and export derive from the same constructed geometry. Imported native SVG can supply authored diagrams. | No general mechanism simulation, articulated rig, fluid model or physical explanation engine is provided. Triangle projection can create heavy SVG/PPT geometry and is not a general hidden-line technical drawing system; orbit/explode remain camera presets. |
+| [PPT Master](https://github.com/hugohe3/ppt-master/tree/523e5bd972f94c3cac8742fec0d54d43824a17bb) | Structured master/layout export replaces flat mode. Supported SVG remains native editable vectors/text; notes, narration, autoplay timing, fade transitions/animation and embedded MP4 clips or rendered 3D motion are wired into the pipeline. | No complete document-ingestion, data-chart, template or presentation-authoring suite is ported. Embedded movie pixels and photographed content are not editable vectors or native 3D; arbitrary SVG features are restricted and presentation-player compatibility still needs broader testing. |
+| [img2threejs](https://github.com/img2threejs/img2threejs/tree/954cd5845e90efd045694bab725d68a9863c20e0) | Its GLB parser participates in self-contained scene import and CAD export checks. Imported GLB originals retain materials/textures, hierarchy and animations; the viewer uses the original visual scene rather than recoloring it as CAD primitives. | No image interpretation, programmatic reconstruction from a reference, visual similarity optimization or automatic retry-to-match loop exists. One selected animation clip is evaluated within camera presets; concurrent clip blending and a full animation editor are not implemented. GLB is not converted into STEP/STL; external/unsupported compressed assets are rejected. |
+| [VoiceStudio](https://github.com/debpalash/VoiceStudio/tree/38740bf77628603395addf2348b22d194e99edd7) | Research source only; no VoiceStudio code or model is included. The workbench now accepts preserved project/chapter WAV tracks, source-plus-voice mixing, gain controls, cut fades and output loudness normalization. | Those additions are local FFmpeg/audio plumbing, not a VoiceStudio integration. Voice cloning, ASR, diarization, dubbing alignment, audiobook tooling and its voice engines remain absent. eSpeak NG is draft speech; naturalness and pronunciation have no superiority evidence. |
+| [text-to-cad](https://github.com/earthtojake/text-to-cad/tree/2f793659fb7bab537e2f00836e06448fc4087cb2) | The installed cadgen package exposes build123d/OpenCASCADE directly. Seven kinds, STEP import, rotation, construction tools, union/subtract/intersect and all-edge fillet/chamfer replace the two-primitive restriction. Exact previews and STEP/STL/GLB checks use post-operation geometry. | No arbitrary generated CAD program, constraint sketcher, selective edge editor, loft/sweep/surface workflow, threaded fastener generator, dimensioned drawing suite or assembly constraint solver is provided. Operations are bounded and can fail for legitimate geometric reasons; validity is not manufacturability. |
+| [video-use](https://github.com/browser-use/video-use/tree/43cfc566833548093455c9d4a46bd69913b7e552) | Original imports are preserved; source-resolution/rational-fps output, three layouts, editable timeline interchange, gain-controlled voice/source mixing and separate original-versus-derived media replace forced low-resolution normalization and exclusive audio modes. The patched FFconcat helper remains in use. | No transcript-driven edit search, ASR word timing, filler removal, arbitrary multitrack NLE, keyframe effects or full agent editing loop is ported. Output still encodes to H.264/SDR and a single CFR canvas, and 3D motion has a separate rendering stage; this is not lossless video editing. |
+| [Shaders](https://github.com/shader-effects-inc/shaders/tree/eb3df5cedc826008be8e1037c1182e649037c74a) | Circle and LinearGradient expose editable parameters in the editor and published viewer, with explicit WebGPU activation/fallback. Real-device WebGPU checks are recorded separately in the verification report. | Only two effect types are wired; the full graph editor, effect collection and framework integrations are not. CSS fallback is not pixel-equivalent. Browser effects are not promised in PPT/film output; isolated device checks do not establish universal compatibility or visual superiority. |
+| [ArtCraft](https://github.com/storytold/artcraft/tree/800217ed04d10fc12706c28e6e91ae2a6b286092) | HistoryManager keeps recoverable stacks after failed actions and now uses generations so clear/project changes cannot reinsert old queued history. The workbench adds actual CAD previews, media/scene inputs, timeline exchange and stable-ID edits around that helper. | The full ArtCraft layer stack, characters, scene/shot editor, generation services and commercial backend are not ported. Independent integrations around an undo helper do not establish feature parity; the editor remains bounded forms/JSON plus presets. |
 
-以上是待做方向，不是已完成功能；不預先填寫比較分數。
+Source evidence: [schema](../studio/schema.py), [pipeline](../studio/pipeline.py), [CAD kernel](../studio/geometry_kernel.py), [native slides](../studio/ppt_worker.py), [scene validation](../studio/scene_document.py), [video](../studio/video.py), [viewer](../web/viewer.js), [shader adapter](../web/shader.js). This table describes implemented paths; test coverage and environment results belong in [VERIFICATION.md](VERIFICATION.md).
+
+## Specific regressions addressed since 5fa508fb
+
+| Earlier restriction | Current implementation | Remaining qualification |
+|---|---|---|
+| Import immediately resized/transcoded media | Original PNG/JPEG/MP4/MOV and PCM WAV bytes are stored under content hashes; posters and output encodes are derived separately | Preservation of source bytes does not make the final composition lossless or retain all color information in the output |
+| 50 MiB video, fixed 720p/24 fps pipeline | Media/audio imports allow 512 MiB; output selects source canvas/fps or explicit 720p/1080p/2160p and 24/25/30/50/60 fps | Source mode uses one chosen canvas and highest source rate, not per-clip VFR; accepted large limits are not a proven throughput guarantee |
+| One exclusive voice/source mode and project-only WAV | Per-chapter WAV, project WAV, voice/source/mix/silent, independent gains, cut fades, limiter and optional loudness normalization | No automatic ducking, speaker separation, denoising, word alignment or arbitrary multitrack mixer |
+| Only boxes/cylinders, 16 parts, no rotation or edge treatment | Seven CAD kinds, STEP import, XYZ rotation, ordered booleans, construction tools, all-edge fillet/chamfer; up to 256 parts | Shape dimensions and positions are still bounded; no parametric sketch/assembly solver or selective-edge editing |
+| Approximate preview differed from constructed geometry | Exact draft preview uses the CAD worker; all five preview outputs and original STEP inputs are hash-checked, and invalid caches rebuild | More expensive than procedural preview; exactness here means shared CAD construction, not identical shading across formats |
+| GLB only acted as an output container | Import and inspect original self-contained GLB scenes, retain visual materials/animations, use them in web/motion | Visual GLB and engineering CAD are independent. No reverse conversion to CAD, general rig editor or concurrent animation-clip blending |
+| 8 chapters, 120 authored seconds, 64 patch operations | 256 chapters/7,200 authored seconds, 16 KiB narration per chapter, 2,048 atomic operations and 16 MiB CLI/HTTP JSON | Title/body length, per-chapter duration and resource ceilings remain; maximum-size production renders are not certified |
+| Fixed chapter workflow diagram | Eleven exposed Archify kinds with an authored JSON document | Full graph schema editing and automatic repository analysis are not supplied by the workbench |
+| Flat slides and still posters for video/3D | Structured PPT, supported editable vectors/text, notes, narration, timings and embedded MP4 movies | Movies are not editable 3D; SVG allowlist, presentation-player behavior and document/chart ingestion limit parity |
+| Fourteen MCP tools, no imports/timeline/preview | Nineteen tools, including asset import/list, timeline export/import and exact CAD preview | Inline uploads are limited to 8 MiB decoded; large files need CLI/HTTP; model reasoning and client configuration are external |
+| Cleared history could receive stale queued undo/redo results | Generation-aware HistoryManager checks invalidate queued operations and stale stack updates | This is a local undo correctness fix, not distributed collaboration or a full scene-editor port |
+
+## Losses and constraints that still matter
+
+1. **Video delivery is a conversion.** Sources are preserved, but film output uses a single constant-frame-rate canvas, H.264 and SDR BT.709. HDR sources are tone-mapped; source mode selects the largest referenced display canvas and highest referenced clip rate. Mixed aspect ratios still require fitting/padding, and animation frames are rendered separately. No matched PSNR/VMAF, render-time or visual blind comparison establishes a general quality advantage.
+2. **Media preservation and color-managed output are different.** Original image bytes retain alpha/profile/metadata. Derived posters account for orientation and supported ICC conversion, but no complete professional print, wide-gamut or HDR delivery workflow has been certified. Preserved originals must not be confused with preservation of every feature in the exported composition.
+3. **Narration remains a specialist gap.** WAV imports and mixing allow externally produced professional speech, but the local built-in voice remains eSpeak NG. Subtitles are authored chapter text rather than ASR-aligned words. There is no cloning, emotion/performance model, lip sync or speaker-aware editing.
+4. **More CAD operations do not make a complete CAD application.** Box/cylinder/sphere/cone/torus/extrusion/STEP are bounded inputs; fillet/chamfer affect all edges, booleans depend on ordered preceding tools, and polygon profiles are restricted. Geometry validity, bounds and volume checks do not prove clearance, strength, printability or manufacturing tolerance. Construction helpers are excluded from deliverables.
+5. **Visual and engineering geometry can intentionally differ.** With `scene_asset`, viewers/motion use the imported GLB, while `manifest.solids` still supplies CAD and CAD diagrams. The outputs record this separation. No claim that the imported artistic model matches the STEP assembly is justified without a separate comparison.
+6. **Cross-format behavior differs.** Web has interactive 3D; MP4 is a rendered sequence; PPT embeds movies and editable supported vectors/text. Browser shaders are not guaranteed in movies or slides, GLB motion is not native PowerPoint 3D, and arbitrary raster content does not become an editable vector. The viewer selects one animation clip and uses fixed camera presets; it does not provide a full shot editor or concurrent clip mixing.
+7. **Layouts and authoring remain constrained.** Three layout families and imported native SVG are more flexible than the baseline, but chapter title/body limits and the SVG allowlist remain. Archify accepts authored graph documents rather than inferring them. No broad novice-task completion study, full accessibility audit or expert design blind review establishes that the workflow is easier or better.
+8. **Resource costs can grow substantially.** A single renderer worker, per-frame browser work, large native CAD meshes and projected SVG triangles can be expensive. Stage/preview caches validate hashes but still have no automatic quota/retention policy, distributed render scheduling or resumable per-frame checkpointing. Successful small fixtures do not establish two-hour, 4K, 256-part throughput.
+9. **Deployment still has platform and trust boundaries.** The renderer remains Linux with Python, Node, native CAD, FFmpeg, Chrome, fonts and Bubblewrap dependencies. Mac control through SSH is headless client/server cooperation, not native Mac rendering. Loopback/session checks and network/PID namespaces are not a hostile-user multitenant service or complete filesystem sandbox; see [SECURITY.md](SECURITY.md).
+10. **Real-device checks have limited scope.** WebGPU activation on tested Metal/Vulkan devices is stronger evidence than fallback-only testing, but it does not validate every device, driver, effect or artistic result. Current evidence and exceptions are recorded in [VERIFICATION.md](VERIFICATION.md), without inferring universal support.
+
+## Evidence needed before saying “stronger”
+
+Compare the same inputs and deliverables: diagram legibility/error rates; editable PPT structure and player playback; CAD shape/tolerance and manufacturing tasks; video/audio fidelity and completion time; first-time user completion rate and revision effort. Run expert or blind quality review separately from file-integrity checks, and record hardware, source commit, settings and external model costs. Improvements to individual mechanisms are meaningful; they do not substitute for these comparisons.
